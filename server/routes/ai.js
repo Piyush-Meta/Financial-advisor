@@ -1,49 +1,47 @@
 import express from "express";
-import OpenAI from "openai";
 
 const router = express.Router();
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 router.post("/chat", async (req, res) => {
   try {
     const { prompt, language = "en" } = req.body;
 
-    if (!prompt) {
-      return res.status(400).json({
-        error: "Prompt required"
-      });
-    }
-
     const systemPrompt = `
 You are an expert Indian financial advisor helping rural women.
-Give practical step-by-step business advice.
-Focus on dairy, tailoring, savings and micro-investments.
+Give simple step-by-step business advice.
+Focus on dairy, tailoring, small shop, savings.
 Respond in ${language === "hi" ? "Hindi" : "English"}.
 `;
 
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: prompt }
-      ],
-      temperature: 0.7,
-    });
+    const response = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "llama-3.1-8b-instant",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: prompt },
+          ],
+        }),
+      }
+    );
+
+    const data = await response.json();
 
     const answer =
-      completion.choices?.[0]?.message?.content ||
-      "Sorry, I could not generate a response.";
+      data?.choices?.[0]?.message?.content ||
+      "Sorry, I could not generate response.";
 
     res.json({ answer });
-
   } catch (error) {
-    console.error("OPENAI ERROR:", error);
+    console.error(error);
     res.status(500).json({
       error: "AI response failed",
-      details: error.message
     });
   }
 });
