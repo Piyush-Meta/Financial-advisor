@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
-import connectDB from './config/db.js'
+
 import aiRoutes from './routes/ai.js'
 import budgetRoutes from './routes/budget.js'
 import userRoutes from './routes/user.js'
@@ -17,31 +17,26 @@ app.use(cors())
 app.use(express.json())
 app.use(morgan('dev'))
 
-await connectDB()
-
 app.get('/', (req, res) => {
-  res.json({ status: 'ok', service: 'Financial Advisor API' })
+  res.json({
+    status: 'ok',
+    message: 'Financial Advisor API running'
+  })
 })
 
+/* routes */
 app.use('/api/ai', aiRoutes)
-app.use('/api/budget', budgetRoutes)
-app.use('/api/users', userRoutes)
-app.use('/api/auth', authRoutes)
+// app.use('/api/budget', budgetRoutes)
+// app.use('/api/users', userRoutes)
+// app.use('/api/auth', authRoutes)
 
+/* error handler */
 app.use((err, req, res, next) => {
-  console.error(err)
-  res.status(500).json({ error: err.message || 'Internal server error' })
+  console.error("SERVER ERROR:", err)
+  res.status(500).json({ error: err.message })
 })
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)
-})
-
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} is already in use. Stop the process using that port or set PORT to a different value.`)
-    process.exit(1)
-  }
-  console.error(err)
-  process.exit(1)
+/* IMPORTANT: render compatible listen */
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`)
 })
