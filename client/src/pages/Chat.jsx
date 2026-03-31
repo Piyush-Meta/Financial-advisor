@@ -1,0 +1,140 @@
+import { useMemo, useState } from 'react'
+import ChatBubble from '../components/ChatBubble.jsx'
+import VoiceButton from '../components/VoiceButton.jsx'
+import { sendAiChat } from '../api/ap.js'
+import { useLanguage } from '../contexts/LanguageContext.jsx'
+
+export default function Chat() {
+  const { strings, language: appLanguage } = useLanguage()
+  const userName = useMemo(() => {
+    const storedUser = localStorage.getItem('sakhi-user')
+    if (!storedUser) return 'Sakhi'
+    try {
+      const parsedUser = JSON.parse(storedUser)
+      return parsedUser.name || parsedUser.email || 'Sakhi'
+    } catch {
+      return 'Sakhi'
+    }
+  }, [])
+
+  const initialMessage = useMemo(() => {
+    const raw = strings.chat.initialMessage
+    return raw.replace(/Sakhi/g, userName)
+  }, [strings.chat.initialMessage, userName])
+
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: initialMessage },
+  ])
+  const [prompt, setPrompt] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const userId = useMemo(() => 'demo-user', [])
+
+  const addMessage = (message) => setMessages((current) => [...current, message])
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    if (!prompt.trim()) return
+
+    const userMessage = { role: 'user', content: prompt }
+    addMessage(userMessage)
+    setPrompt('')
+    setLoading(true)
+
+    try {
+      const response = await sendAiChat({ userId, prompt, language: appLanguage })
+      const answer = response.data?.answer || strings.chat.fallbackMessage
+      addMessage({ role: 'assistant', content: answer })
+    } catch (error) {
+      addMessage({ role: 'assistant', content: strings.chat.errorMessage })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-[calc(100vh-96px)] bg-linear-to-br from-slate-950 via-fuchsia-950 to-fuchsia-900 px-4 py-10 text-white">
+      <div className="mx-auto w-full max-w-full space-y-8">
+        <div className="rounded-4xl bg-slate-950/80 p-8 shadow-[0_40px_120px_rgba(168,85,247,0.25)] ring-1 ring-white/10 backdrop-blur-xl">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.4em] text-fuchsia-300">AI Mentor</p>
+              <h1 className="mt-3 text-3xl font-semibold text-white">Talk to your financial guide</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">{strings.chat.description}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-8 lg:grid-cols-[1.4fr_0.8fr]">
+          <div className="space-y-6 rounded-4xl bg-white/95 p-6 shadow-2xl ring-1 ring-slate-900/10">
+            <div className="rounded-[1.75rem] bg-slate-950 px-6 py-5 text-white shadow-sm">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.35em] text-fuchsia-300">Advisor</p>
+                  <p className="mt-2 text-lg font-semibold">Hi {userName}! Tell me what you want help with today.</p>
+                </div>
+                <span className="inline-flex items-center rounded-full bg-fuchsia-600 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-white">
+                  Live
+                </span>
+              </div>
+            </div>
+
+            <section className="space-y-4">
+              {messages.map((message, index) => (
+                <ChatBubble key={index} role={message.role} content={message.content} />
+              ))}
+            </section>
+
+            <form onSubmit={handleSubmit} className="grid gap-4 rounded-[1.75rem] bg-slate-100 p-5 shadow-inner">
+              <textarea
+                rows="4"
+                value={prompt}
+                onChange={(event) => setPrompt(event.target.value)}
+                className="w-full rounded-3xl border border-slate-300 bg-white px-4 py-4 text-sm text-slate-900 outline-none transition focus:border-fuchsia-600 focus:ring-2 focus:ring-fuchsia-200"
+                placeholder={strings.chat.placeholder}
+              />
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap items-center gap-3">
+                  <VoiceButton onTranscript={(text) => setPrompt((current) => `${current} ${text}`)} />
+                  <span className="rounded-full bg-slate-200 px-3 py-2 text-xs font-semibold text-slate-700">{strings.chat.voiceButton}</span>
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="rounded-full bg-fuchsia-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-fuchsia-500 disabled:cursor-not-allowed disabled:bg-slate-300"
+                >
+                  {loading ? strings.chat.listening : strings.chat.sendButton}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <aside className="space-y-6 rounded-4xl bg-slate-950/90 p-6 text-slate-100 shadow-2xl ring-1 ring-white/10">
+            <div className="rounded-[1.75rem] bg-fuchsia-900/85 p-6">
+              <p className="text-xs uppercase tracking-[0.35em] text-fuchsia-200">Voice chat helper</p>
+              <h2 className="mt-3 text-xl font-semibold text-white">How can I assist you?</h2>
+              <p className="mt-3 text-sm leading-6 text-slate-300">Use voice or type your question to get fast personalized guidance.</p>
+            </div>
+            <div className="rounded-3xl bg-white/10 p-5">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-fuchsia-600 text-xl text-white">🤖</div>
+                <div>
+                  <p className="font-semibold text-white">AI voice assistant</p>
+                  <p className="mt-1 text-sm text-slate-300">Say “show my budget” or “how can I save more?”</p>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-3xl bg-white/10 p-5 text-sm text-slate-300">
+              <p className="font-semibold text-white">Quick actions</p>
+              <ul className="mt-4 space-y-3">
+                <li className="rounded-2xl bg-slate-900/70 px-4 py-3">Start a savings plan</li>
+                <li className="rounded-2xl bg-slate-900/70 px-4 py-3">Check expense trends</li>
+                <li className="rounded-2xl bg-slate-900/70 px-4 py-3">Ask for business tips</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  )
+}
