@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
+import connectDB from './config/db.js'
 
 import aiRoutes from './routes/ai.js'
 import budgetRoutes from './routes/budget.js'
@@ -9,6 +10,7 @@ import userRoutes from './routes/user.js'
 import authRoutes from './routes/auth.js'
 
 dotenv.config()
+connectDB()
 
 const app = express()
 const PORT = process.env.PORT || 4000
