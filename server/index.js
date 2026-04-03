@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 app.use('/api/ai', aiRoutes)
 // app.use('/api/budget', budgetRoutes)
 // app.use('/api/users', userRoutes)
-// app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes)
 
 /* error handler */
 app.use((err, req, res, next) => {
