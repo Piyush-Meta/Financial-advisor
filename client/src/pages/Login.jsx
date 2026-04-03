@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext.jsx'
+import { loginUser } from '../api/ap.js'
 
 export default function Login() {
   const { strings } = useLanguage()
@@ -8,7 +9,6 @@ export default function Login() {
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
   useEffect(() => {
     const token = localStorage.getItem('sakhi-token')
@@ -32,23 +32,16 @@ export default function Login() {
     setStatus('Signing in...')
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Unable to sign in.')
-      }
+      const response = await loginUser(form)
+      const data = response.data
 
       localStorage.setItem('sakhi-token', data.token)
       localStorage.setItem('sakhi-user', JSON.stringify(data.user))
       setStatus(strings.login.successMessage)
       navigate('/dashboard')
     } catch (error) {
-      setStatus(error.message || 'Unable to sign in.')
+      const errorMessage = error?.response?.data?.error || error.message || 'Unable to sign in.'
+      setStatus(errorMessage)
     } finally {
       setLoading(false)
     }

@@ -1,11 +1,16 @@
 import axios from 'axios'
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api',
-  timeout: 20000,
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:4000').replace(/\/$/, '')
+
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
-export const fetchBudget = (userId) => api.get(`/budget/${userId}`)
-export const saveBudget = (payload) => api.post('/budget', payload)
-export const sendAiChat = (payload) => api.post('/ai/chat', payload)
-export const createUserProfile = (payload) => api.post('/users/profile', payload)
+export const sendAiChat = (data) => apiClient.post('/api/ai/chat', data)
+export const loginUser = (data) => apiClient.post('/api/auth/login', data)
+export const registerUser = (data) => apiClient.post('/api/auth/register', data)
+
+export { API_BASE_URL }

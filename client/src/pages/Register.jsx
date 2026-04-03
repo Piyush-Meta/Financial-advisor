@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext.jsx'
+import { registerUser } from '../api/ap.js'
 
 export default function Register() {
   const { strings } = useLanguage()
@@ -8,7 +9,6 @@ export default function Register() {
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
   useEffect(() => {
     const token = localStorage.getItem('sakhi-token')
@@ -30,22 +30,16 @@ export default function Register() {
     setStatus('Creating account...')
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || 'Unable to register.')
-      }
+      const response = await registerUser(form)
+      const data = response.data
 
       localStorage.setItem('sakhi-token', data.token)
       localStorage.setItem('sakhi-user', JSON.stringify(data.user))
       setStatus(strings.register.successMessage)
       navigate('/dashboard')
     } catch (error) {
-      setStatus(error.message || 'Unable to register.')
+      const errorMessage = error?.response?.data?.error || error.message || 'Unable to register.'
+      setStatus(errorMessage)
     } finally {
       setLoading(false)
     }
