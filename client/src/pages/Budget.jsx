@@ -3,6 +3,7 @@ import { fetchBudget, saveBudget } from '../api/ap.js'
 import { useLanguage } from '../contexts/LanguageContext.jsx'
 
 const initialItems = [
+  
   { category: 'Milk income', amount: 0, type: 'income', note: 'Daily sales' },
   { category: 'Feed cost', amount: 0, type: 'expense', note: 'Cattle feed' },
   { category: 'Savings', amount: 0, type: 'expense', note: 'Emergency fund' },

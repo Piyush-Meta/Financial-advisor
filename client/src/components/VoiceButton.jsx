@@ -1,9 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function VoiceButton({ onTranscript, recognitionLang = 'en-US', onListeningChange }) {
   const [supported, setSupported] = useState(false)
   const [listening, setListening] = useState(false)
-  const [recognition, setRecognition] = useState(null)
+  const recognitionRef = useRef(null)
+  const keepListeningRef = useRef(false)
+  const onTranscriptRef = useRef(onTranscript)
+  const onListeningChangeRef = useRef(onListeningChange)
+
+  useEffect(() => {
+    onTranscriptRef.current = onTranscript
+  }, [onTranscript])
+
+  useEffect(() => {
+    onListeningChangeRef.current = onListeningChange
+  }, [onListeningChange])
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -18,19 +29,44 @@ export default function VoiceButton({ onTranscript, recognitionLang = 'en-US', o
     instance.onresult = (event) => {
       const result = event.results[event.results.length - 1]
       const transcript = result?.[0]?.transcript
-      if (transcript) onTranscript(transcript)
+      if (transcript && onTranscriptRef.current) onTranscriptRef.current(transcript)
     }
 
     instance.onend = () => {
+      if (keepListeningRef.current) {
+        try {
+          instance.start()
+          return
+        } catch {
+          // start can throw during rapid restarts; allow next end cycle to retry
+        }
+      }
+
       setListening(false)
-      if (onListeningChange) onListeningChange(false)
+      if (onListeningChangeRef.current) onListeningChangeRef.current(false)
     }
 
-    setRecognition(instance)
+    recognitionRef.current = instance
     setSupported(true)
-  }, [onTranscript, recognitionLang, onListeningChange])
+
+    return () => {
+      keepListeningRef.current = false
+      try {
+        instance.stop()
+      } catch {
+        // Ignore stop errors during teardown
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (recognitionRef.current) {
+      recognitionRef.current.lang = recognitionLang
+    }
+  }, [recognitionLang])
 
   const toggleListening = () => {
+    const recognition = recognitionRef.current
     if (!recognition) {
       window.alert(
         'Voice recognition is not supported in this browser. Please use Chrome or Edge on desktop/mobile, or try again in a supported browser.'
@@ -39,14 +75,16 @@ export default function VoiceButton({ onTranscript, recognitionLang = 'en-US', o
     }
 
     if (listening) {
+      keepListeningRef.current = false
       recognition.stop()
       setListening(false)
-      if (onListeningChange) onListeningChange(false)
+      if (onListeningChangeRef.current) onListeningChangeRef.current(false)
     } else {
+      keepListeningRef.current = true
       recognition.lang = recognitionLang
       recognition.start()
       setListening(true)
-      if (onListeningChange) onListeningChange(true)
+      if (onListeningChangeRef.current) onListeningChangeRef.current(true)
     }
   }
 
