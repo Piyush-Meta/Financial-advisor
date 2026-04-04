@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
 /* routes */
 app.use('/api/ai', aiRoutes)
-// app.use('/api/budget', budgetRoutes)
+app.use('/api/budget', budgetRoutes)
 // app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
 
