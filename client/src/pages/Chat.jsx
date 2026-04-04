@@ -18,6 +18,14 @@ const voiceLanguageOptions = [
   { value: 'ur-IN', label: 'Urdu' },
 ]
 
+const topicQuickPrompts = [
+  'How can I save more from my business income?',
+  'Help me make a budget for dairy income and expenses.',
+  'What small business can I start with low money?',
+  'Give me safe micro-investment ideas.',
+  'How do I reduce daily expenses and save for emergencies?',
+]
+
 const recognitionLangFromApp = {
   en: 'en-US',
   hi: 'hi-IN',
@@ -50,6 +58,8 @@ const speechLangFromVoice = {
   'pa-IN': 'pa-IN',
   'ur-IN': 'ur-IN',
 }
+
+const chatHistoryStorageKey = (userId) => `sakhi-chat-history-${userId}`
 
 const baseLangFromTag = (tag) => (tag || 'en-US').split('-')[0].toLowerCase()
 
@@ -91,18 +101,36 @@ export default function Chat() {
     return raw.replace(/Sakhi/g, userName)
   }, [strings.chat.initialMessage, userName])
 
-  const [messages, setMessages] = useState([
-    { role: 'assistant', content: initialMessage },
-  ])
+  const userId = useMemo(() => 'demo-user', [])
+  const storageKey = useMemo(() => chatHistoryStorageKey(userId), [userId])
+
+  const [messages, setMessages] = useState(() => {
+    if (typeof window === 'undefined') {
+      return [{ role: 'assistant', content: initialMessage }]
+    }
+
+    try {
+      const cached = localStorage.getItem(storageKey)
+      if (cached) {
+        const parsed = JSON.parse(cached)
+        if (Array.isArray(parsed) && parsed.length) return parsed
+      }
+    } catch {
+      // fall back to initial message
+    }
+
+    return [{ role: 'assistant', content: initialMessage }]
+  })
   const [prompt, setPrompt] = useState('')
   const [loading, setLoading] = useState(false)
+  const [sendingTopic, setSendingTopic] = useState(false)
   const [voiceLanguage, setVoiceLanguage] = useState(recognitionLangFromApp[appLanguage] || 'en-US')
   const [speakReplies, setSpeakReplies] = useState(true)
   const [isListening, setIsListening] = useState(false)
   const [speechStatus, setSpeechStatus] = useState('idle')
   const [availableVoices, setAvailableVoices] = useState([])
+  const [selectedVoiceName, setSelectedVoiceName] = useState('auto')
 
-  const userId = useMemo(() => 'demo-user', [])
   const activeUtteranceRef = useRef(null)
 
   useEffect(() => {
@@ -123,10 +151,21 @@ export default function Chat() {
 
   const addMessage = (message) => setMessages((current) => [...current, message])
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(messages))
+    } catch {
+      // Ignore storage failures.
+    }
+  }, [messages, storageKey])
+
   const speakText = (text) => {
     if (!window.speechSynthesis || !speakReplies || !text) return
     const speechLang = speechLangFromVoice[voiceLanguage] || 'en-US'
-    const selectedVoice = chooseBestVoice(availableVoices, speechLang)
+    const selectedVoice =
+      selectedVoiceName !== 'auto'
+        ? availableVoices.find((voice) => voice.name === selectedVoiceName) || chooseBestVoice(availableVoices, speechLang)
+        : chooseBestVoice(availableVoices, speechLang)
 
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = speechLang
@@ -171,6 +210,20 @@ export default function Chat() {
     window.speechSynthesis.cancel()
     activeUtteranceRef.current = null
     setSpeechStatus('idle')
+  }
+
+  const handleQuickPrompt = (topicPrompt) => {
+    setPrompt(topicPrompt)
+  }
+
+  const clearChatHistory = () => {
+    const resetMessages = [{ role: 'assistant', content: initialMessage }]
+    setMessages(resetMessages)
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(resetMessages))
+    } catch {
+      // Ignore storage failures.
+    }
   }
 
   useEffect(() => {
@@ -231,6 +284,39 @@ export default function Chat() {
               {messages.map((message, index) => (
                 <ChatBubble key={index} role={message.role} content={message.content} />
               ))}
+              {loading && (
+                <div className="rounded-[1.75rem] border border-fuchsia-200 bg-fuchsia-50 px-5 py-4 text-sm text-fuchsia-700 shadow-sm">
+                  Thinking about business and finance advice...
+                </div>
+              )}
+            </section>
+
+            <section className="rounded-[1.75rem] border border-fuchsia-100 bg-white p-5 shadow-sm">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-fuchsia-600">Quick topics</p>
+                  <p className="mt-1 text-sm text-slate-600">Tap one to start a focused finance/business conversation.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={clearChatHistory}
+                  className="inline-flex rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                  Clear chat history
+                </button>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {topicQuickPrompts.map((topicPrompt) => (
+                  <button
+                    key={topicPrompt}
+                    type="button"
+                    onClick={() => handleQuickPrompt(topicPrompt)}
+                    className="rounded-full bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-fuchsia-100 hover:text-fuchsia-700"
+                  >
+                    {topicPrompt}
+                  </button>
+                ))}
+              </div>
             </section>
 
             <form onSubmit={handleSubmit} className="grid gap-4 rounded-[1.75rem] bg-slate-100 p-5 shadow-inner">
@@ -259,6 +345,20 @@ export default function Chat() {
                     {voiceLanguageOptions.map((option) => (
                       <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
+                  </select>
+                  <select
+                    value={selectedVoiceName}
+                    onChange={(event) => setSelectedVoiceName(event.target.value)}
+                    className="max-w-[220px] rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700"
+                  >
+                    <option value="auto">Auto voice</option>
+                    {availableVoices
+                      .filter((voice) => voice.lang?.toLowerCase().startsWith(baseLangFromTag(speechLangFromVoice[voiceLanguage] || 'en-US')))
+                      .map((voice) => (
+                        <option key={voice.name} value={voice.name}>
+                          {voice.name}
+                        </option>
+                      ))}
                   </select>
                   <button
                     type="button"
