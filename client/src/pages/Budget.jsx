@@ -16,6 +16,8 @@ export default function Budget() {
   const [status, setStatus] = useState('')
   const [advice, setAdvice] = useState('')
   const [adviceLoading, setAdviceLoading] = useState(false)
+  const [businessPlan, setBusinessPlan] = useState('')
+  const [businessPlanLoading, setBusinessPlanLoading] = useState(false)
   const userId = 'demo-user'
 
   useEffect(() => {
@@ -95,6 +97,25 @@ export default function Budget() {
     return lines.join('\n')
   }
 
+  const buildFallbackBusinessPlan = () => {
+    const monthlyBreakEven = budget.expenses + budget.savingsGoal
+    const dailyTarget = Math.ceil(monthlyBreakEven / 30)
+    const profitOrLoss = budget.income - budget.expenses
+    const sustainable = remainingBalance >= 0
+
+    return [
+      `Break-even point (monthly): ₹${monthlyBreakEven}`,
+      `Daily target (30-day): ₹${dailyTarget}`,
+      `Saving strategy: Keep aside ₹${Math.ceil((budget.savingsGoal || 0) / 30)} per day before optional spending.`,
+      '',
+      `1. Profit or loss analysis: ${profitOrLoss >= 0 ? `Profit of ₹${profitOrLoss}` : `Loss of ₹${Math.abs(profitOrLoss)}`}`,
+      `2. Is business sustainable?: ${sustainable ? 'Yes, currently sustainable if this pattern continues.' : 'Not yet. Expenses + savings exceed current income.'}`,
+      '3. How to increase profit: raise weekly sales target, improve product mix, and add one high-margin item.',
+      '4. How to reduce cost: cut top expense categories by 5-10%, negotiate feed/vendor rates, and reduce wastage.',
+      '5. Saving suggestion: automate savings immediately after income, and protect at least one month of expenses as emergency fund.',
+    ].join('\n')
+  }
+
   const handleGenerateAdvice = async () => {
     setAdviceLoading(true)
     setAdvice('')
@@ -118,6 +139,45 @@ export default function Budget() {
       setAdvice(buildFallbackAdvice())
     } finally {
       setAdviceLoading(false)
+    }
+  }
+
+  const handleGenerateBusinessPlan = async () => {
+    setBusinessPlanLoading(true)
+    setBusinessPlan('')
+
+    const monthlyBreakEven = budget.expenses + budget.savingsGoal
+    const dailyTarget = Math.ceil(monthlyBreakEven / 30)
+
+    const prompt = [
+      'Create a practical monthly business plan from this budget data.',
+      `Income: ₹${budget.income}`,
+      `Expenses: ₹${budget.expenses}`,
+      `Savings Goal: ₹${budget.savingsGoal}`,
+      `Remaining after savings: ₹${remainingBalance}`,
+      `Break-even baseline (expenses + savings): ₹${monthlyBreakEven}`,
+      `Daily target baseline (30-day): ₹${dailyTarget}`,
+      'Line Items:',
+      ...budget.lineItems.map((item) => `- ${item.category}: ₹${item.amount || 0} (${item.type})`),
+      'Return the response with these exact headings and concise actionable points:',
+      'Break-even point (monthly):',
+      'Daily target (30-day):',
+      'Saving strategy:',
+      '1. Profit or loss analysis',
+      '2. Is business sustainable?',
+      '3. How to increase profit',
+      '4. How to reduce cost',
+      '5. Saving suggestion',
+    ].join('\n')
+
+    try {
+      const response = await sendAiChat({ userId, prompt, language })
+      const answer = response.data?.answer?.trim()
+      setBusinessPlan(answer || buildFallbackBusinessPlan())
+    } catch {
+      setBusinessPlan(buildFallbackBusinessPlan())
+    } finally {
+      setBusinessPlanLoading(false)
     }
   }
 
@@ -246,18 +306,32 @@ export default function Budget() {
           </button>
         </div>
         <div className="mt-4">
-          <button
-            type="button"
-            onClick={handleGenerateAdvice}
-            className="inline-flex items-center justify-center rounded-full border border-fuchsia-200 bg-fuchsia-50 px-5 py-2 text-sm font-semibold text-fuchsia-700 transition hover:bg-fuchsia-100"
-          >
-            {adviceLoading ? 'Generating suggestions...' : 'Get AI suggestions for this budget'}
-          </button>
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={handleGenerateAdvice}
+              className="inline-flex items-center justify-center rounded-full border border-fuchsia-200 bg-fuchsia-50 px-5 py-2 text-sm font-semibold text-fuchsia-700 transition hover:bg-fuchsia-100"
+            >
+              {adviceLoading ? 'Generating suggestions...' : 'Get AI suggestions for this budget'}
+            </button>
+            <button
+              type="button"
+              onClick={handleGenerateBusinessPlan}
+              className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
+            >
+              {businessPlanLoading ? 'Generating business plan...' : 'Generate Business Plan'}
+            </button>
+          </div>
         </div>
         {status && <p className="mt-4 text-sm text-slate-600">{status}</p>}
         {advice && (
           <div className="mt-4 rounded-2xl border border-fuchsia-100 bg-fuchsia-50 p-4 text-sm leading-7 text-slate-700 whitespace-pre-line">
             {advice}
+          </div>
+        )}
+        {businessPlan && (
+          <div className="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50 p-4 text-sm leading-7 text-slate-700 whitespace-pre-line">
+            {businessPlan}
           </div>
         )}
       </section>
