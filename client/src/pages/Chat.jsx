@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import ChatBubble from '../components/ChatBubble.jsx'
 import VoiceButton from '../components/VoiceButton.jsx'
 import { sendAiChat } from '../api/ap.js'
@@ -51,6 +51,28 @@ const speechLangFromVoice = {
   'ur-IN': 'ur-IN',
 }
 
+const baseLangFromTag = (tag) => (tag || 'en-US').split('-')[0].toLowerCase()
+
+const chooseBestVoice = (voices, langTag) => {
+  if (!voices?.length) return null
+
+  const normalizedTag = (langTag || 'en-US').toLowerCase()
+  const targetBase = baseLangFromTag(normalizedTag)
+
+  const exact = voices.find((voice) => voice.lang?.toLowerCase() === normalizedTag)
+  if (exact) return exact
+
+  const sameBase = voices.find((voice) => voice.lang?.toLowerCase().startsWith(`${targetBase}-`))
+  if (sameBase) return sameBase
+
+  const localSameBase = voices.find(
+    (voice) => voice.localService && voice.lang?.toLowerCase().startsWith(`${targetBase}-`)
+  )
+  if (localSameBase) return localSameBase
+
+  return voices.find((voice) => voice.default) || voices[0]
+}
+
 export default function Chat() {
   const { strings, language: appLanguage } = useLanguage()
   const userName = useMemo(() => {
@@ -77,20 +99,84 @@ export default function Chat() {
   const [voiceLanguage, setVoiceLanguage] = useState(recognitionLangFromApp[appLanguage] || 'en-US')
   const [speakReplies, setSpeakReplies] = useState(true)
   const [isListening, setIsListening] = useState(false)
+  const [speechStatus, setSpeechStatus] = useState('idle')
+  const [availableVoices, setAvailableVoices] = useState([])
 
   const userId = useMemo(() => 'demo-user', [])
+  const activeUtteranceRef = useRef(null)
+
+  useEffect(() => {
+    if (!window.speechSynthesis) return undefined
+
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices()
+      setAvailableVoices(voices)
+    }
+
+    loadVoices()
+    window.speechSynthesis.addEventListener('voiceschanged', loadVoices)
+
+    return () => {
+      window.speechSynthesis.removeEventListener('voiceschanged', loadVoices)
+    }
+  }, [])
 
   const addMessage = (message) => setMessages((current) => [...current, message])
 
   const speakText = (text) => {
     if (!window.speechSynthesis || !speakReplies || !text) return
+    const speechLang = speechLangFromVoice[voiceLanguage] || 'en-US'
+    const selectedVoice = chooseBestVoice(availableVoices, speechLang)
+
     const utterance = new SpeechSynthesisUtterance(text)
-    utterance.lang = speechLangFromVoice[voiceLanguage] || 'en-US'
-    utterance.rate = 1
+    utterance.lang = speechLang
+    if (selectedVoice) utterance.voice = selectedVoice
+
+    const nonEnglish = baseLangFromTag(speechLang) !== 'en'
+    utterance.rate = nonEnglish ? 0.9 : 0.96
     utterance.pitch = 1
+
+    utterance.onstart = () => setSpeechStatus('speaking')
+    utterance.onend = () => {
+      activeUtteranceRef.current = null
+      setSpeechStatus('idle')
+    }
+    utterance.onerror = () => {
+      activeUtteranceRef.current = null
+      setSpeechStatus('idle')
+    }
+
+    activeUtteranceRef.current = utterance
     window.speechSynthesis.cancel()
     window.speechSynthesis.speak(utterance)
   }
+
+  const pauseOrResumeSpeech = () => {
+    if (!window.speechSynthesis) return
+
+    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+      window.speechSynthesis.pause()
+      setSpeechStatus('paused')
+      return
+    }
+
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume()
+      setSpeechStatus('speaking')
+    }
+  }
+
+  const stopSpeech = () => {
+    if (!window.speechSynthesis) return
+    window.speechSynthesis.cancel()
+    activeUtteranceRef.current = null
+    setSpeechStatus('idle')
+  }
+
+  useEffect(() => {
+    if (speakReplies) return
+    stopSpeech()
+  }, [speakReplies])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -180,6 +266,22 @@ export default function Chat() {
                     className={`rounded-full px-3 py-2 text-xs font-semibold ${speakReplies ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}
                   >
                     {speakReplies ? 'Voice reply on' : 'Voice reply off'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={pauseOrResumeSpeech}
+                    disabled={speechStatus === 'idle'}
+                    className="rounded-full bg-amber-100 px-3 py-2 text-xs font-semibold text-amber-700 disabled:opacity-50"
+                  >
+                    {speechStatus === 'paused' ? 'Resume voice' : 'Pause voice'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={stopSpeech}
+                    disabled={speechStatus === 'idle'}
+                    className="rounded-full bg-rose-100 px-3 py-2 text-xs font-semibold text-rose-700 disabled:opacity-50"
+                  >
+                    Stop voice
                   </button>
                 </div>
                 <button

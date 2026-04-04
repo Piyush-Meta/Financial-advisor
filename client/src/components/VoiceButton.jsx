@@ -22,20 +22,33 @@ export default function VoiceButton({ onTranscript, recognitionLang = 'en-US', o
 
     const instance = new SpeechRecognition()
     instance.lang = recognitionLang
-    instance.interimResults = true
+    instance.interimResults = false
     instance.continuous = true
     instance.maxAlternatives = 1
 
     instance.onresult = (event) => {
-      const result = event.results[event.results.length - 1]
-      const transcript = result?.[0]?.transcript
-      if (transcript && onTranscriptRef.current) onTranscriptRef.current(transcript)
+      let finalTranscript = ''
+      for (let index = event.resultIndex; index < event.results.length; index += 1) {
+        const result = event.results[index]
+        if (result?.isFinal && result[0]?.transcript) {
+          finalTranscript += `${result[0].transcript} `
+        }
+      }
+
+      const cleanedTranscript = finalTranscript.trim()
+      if (cleanedTranscript && onTranscriptRef.current) {
+        onTranscriptRef.current(cleanedTranscript)
+      }
+    }
+
+    instance.onerror = () => {
+      // Keep session alive for recoverable recognition errors.
     }
 
     instance.onend = () => {
       if (keepListeningRef.current) {
         try {
-          instance.start()
+          setTimeout(() => instance.start(), 120)
           return
         } catch {
           // start can throw during rapid restarts; allow next end cycle to retry
