@@ -6,6 +6,15 @@ const budgetSchema = new mongoose.Schema({
   expenses: { type: Number, default: 0 },
   savingsGoal: { type: Number, default: 0 },
   updatedAt: { type: Date, default: Date.now },
+  history: [
+    {
+      monthKey: String,
+      income: Number,
+      expenses: Number,
+      savingsGoal: Number,
+      savedAt: { type: Date, default: Date.now },
+    },
+  ],
   lineItems: [
     {
       category: String,
