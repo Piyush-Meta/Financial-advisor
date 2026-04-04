@@ -13,7 +13,7 @@ export default function Login() {
   useEffect(() => {
     const token = localStorage.getItem('sakhi-token')
     if (token) {
-      navigate('/dashboard')
+      navigate('/')
     }
   }, [navigate])
 
@@ -38,7 +38,7 @@ export default function Login() {
       localStorage.setItem('sakhi-token', data.token)
       localStorage.setItem('sakhi-user', JSON.stringify(data.user))
       setStatus(strings.login.successMessage)
-      navigate('/dashboard')
+      navigate('/')
     } catch (error) {
       const errorMessage = error?.response?.data?.error || error.message || 'Unable to sign in.'
       setStatus(errorMessage)

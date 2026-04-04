@@ -12,7 +12,7 @@ export default function Register() {
 
   useEffect(() => {
     const token = localStorage.getItem('sakhi-token')
-    if (token) navigate('/dashboard')
+    if (token) navigate('/')
   }, [navigate])
 
   const handleChange = (field, value) => {
@@ -36,7 +36,7 @@ export default function Register() {
       localStorage.setItem('sakhi-token', data.token)
       localStorage.setItem('sakhi-user', JSON.stringify(data.user))
       setStatus(strings.register.successMessage)
-      navigate('/dashboard')
+      navigate('/')
     } catch (error) {
       const errorMessage = error?.response?.data?.error || error.message || 'Unable to register.'
       setStatus(errorMessage)

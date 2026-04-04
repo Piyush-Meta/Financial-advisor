@@ -89,15 +89,6 @@ export default function Home() {
 
       <main className="relative mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-6 sm:px-6 lg:px-8">
         <section className="relative overflow-hidden rounded-[3rem] border border-white/10 bg-white/5 p-5 shadow-[0_40px_120px_rgba(15,23,42,0.55)] backdrop-blur-2xl sm:p-8 lg:p-10">
-          <div className="mb-6 flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-fuchsia-100">
-              Premium fintech experience
-            </span>
-            <span className="rounded-full bg-emerald-500/15 px-4 py-2 text-xs font-semibold text-emerald-200 ring-1 ring-emerald-400/20">
-              Built for hackathon judging
-            </span>
-          </div>
-
           <div className="grid items-center gap-10 xl:grid-cols-[1.02fr_0.98fr]">
             <div className="space-y-8">
               <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-slate-100 shadow-lg">
@@ -148,7 +139,7 @@ export default function Home() {
             </div>
 
             <div className="relative mx-auto w-full max-w-2xl">
-              <div className="absolute -left-4 top-12 z-10 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 shadow-xl backdrop-blur-xl">
+              <div className="absolute -left-4 top-24 z-10 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 shadow-xl backdrop-blur-xl">
                 <p className="text-[11px] uppercase tracking-[0.35em] text-fuchsia-100">Growth score</p>
                 <p className="mt-1 text-xl font-black">94/100</p>
               </div>
@@ -195,7 +186,7 @@ export default function Home() {
               </div>
 
               <div className="mt-4 rounded-4xl border border-white/10 bg-white/10 p-4 shadow-lg backdrop-blur-xl">
-                <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-100">Glass card language selector</h3>
+                <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-100">Language selector</h3>
                 <div className="mt-4 flex flex-wrap gap-3">
                   {Object.entries(languageNames).map(([key, label]) => (
                     <button
