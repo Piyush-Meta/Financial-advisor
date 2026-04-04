@@ -2,15 +2,34 @@ import express from "express";
 
 const router = express.Router();
 
+const languageLabels = {
+  en: "English",
+  hi: "Hindi",
+  od: "Odia",
+  bn: "Bengali",
+  ta: "Tamil",
+  te: "Telugu",
+  mr: "Marathi",
+  gu: "Gujarati",
+  pa: "Punjabi",
+  ur: "Urdu",
+};
+
 router.post("/chat", async (req, res) => {
   try {
     const { prompt, language = "en" } = req.body;
 
+    const targetLanguage = language === "auto"
+      ? "the same language as the user message"
+      : (languageLabels[language] || "English");
+
     const systemPrompt = `
 You are an expert Indian financial advisor helping rural women.
-Give simple step-by-step business advice.
-Focus on dairy, tailoring, small shop, savings.
-Respond in ${language === "hi" ? "Hindi" : "English"}.
+Give simple step-by-step business and finance advice.
+Focus on dairy, tailoring, small shop, savings, loans, and budgeting.
+If the user asks unrelated questions, gently bring the conversation back to business/finance.
+Respond in ${targetLanguage}.
+Use short, practical action points.
 `;
 
     const response = await fetch(

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export default function VoiceButton({ onTranscript }) {
+export default function VoiceButton({ onTranscript, recognitionLang = 'en-US', onListeningChange }) {
   const [supported, setSupported] = useState(false)
   const [listening, setListening] = useState(false)
   const [recognition, setRecognition] = useState(null)
@@ -10,22 +10,25 @@ export default function VoiceButton({ onTranscript }) {
     if (!SpeechRecognition) return
 
     const instance = new SpeechRecognition()
-    instance.lang = 'en-IN'
-    instance.interimResults = false
+    instance.lang = recognitionLang
+    instance.interimResults = true
+    instance.continuous = true
     instance.maxAlternatives = 1
 
     instance.onresult = (event) => {
-      const transcript = event.results[0]?.[0]?.transcript
+      const result = event.results[event.results.length - 1]
+      const transcript = result?.[0]?.transcript
       if (transcript) onTranscript(transcript)
     }
 
     instance.onend = () => {
       setListening(false)
+      if (onListeningChange) onListeningChange(false)
     }
 
     setRecognition(instance)
     setSupported(true)
-  }, [onTranscript])
+  }, [onTranscript, recognitionLang, onListeningChange])
 
   const toggleListening = () => {
     if (!recognition) {
@@ -38,9 +41,12 @@ export default function VoiceButton({ onTranscript }) {
     if (listening) {
       recognition.stop()
       setListening(false)
+      if (onListeningChange) onListeningChange(false)
     } else {
+      recognition.lang = recognitionLang
       recognition.start()
       setListening(true)
+      if (onListeningChange) onListeningChange(true)
     }
   }
 

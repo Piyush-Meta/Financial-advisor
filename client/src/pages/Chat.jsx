@@ -4,6 +4,53 @@ import VoiceButton from '../components/VoiceButton.jsx'
 import { sendAiChat } from '../api/ap.js'
 import { useLanguage } from '../contexts/LanguageContext.jsx'
 
+const voiceLanguageOptions = [
+  { value: 'auto', label: 'Auto detect' },
+  { value: 'en-US', label: 'English' },
+  { value: 'hi-IN', label: 'Hindi' },
+  { value: 'or-IN', label: 'Odia' },
+  { value: 'bn-IN', label: 'Bengali' },
+  { value: 'ta-IN', label: 'Tamil' },
+  { value: 'te-IN', label: 'Telugu' },
+  { value: 'mr-IN', label: 'Marathi' },
+  { value: 'gu-IN', label: 'Gujarati' },
+  { value: 'pa-IN', label: 'Punjabi' },
+  { value: 'ur-IN', label: 'Urdu' },
+]
+
+const recognitionLangFromApp = {
+  en: 'en-US',
+  hi: 'hi-IN',
+  od: 'or-IN',
+}
+
+const aiLanguageFromVoice = {
+  'en-US': 'en',
+  'hi-IN': 'hi',
+  'or-IN': 'od',
+  'bn-IN': 'bn',
+  'ta-IN': 'ta',
+  'te-IN': 'te',
+  'mr-IN': 'mr',
+  'gu-IN': 'gu',
+  'pa-IN': 'pa',
+  'ur-IN': 'ur',
+}
+
+const speechLangFromVoice = {
+  auto: 'en-US',
+  'en-US': 'en-US',
+  'hi-IN': 'hi-IN',
+  'or-IN': 'or-IN',
+  'bn-IN': 'bn-IN',
+  'ta-IN': 'ta-IN',
+  'te-IN': 'te-IN',
+  'mr-IN': 'mr-IN',
+  'gu-IN': 'gu-IN',
+  'pa-IN': 'pa-IN',
+  'ur-IN': 'ur-IN',
+}
+
 export default function Chat() {
   const { strings, language: appLanguage } = useLanguage()
   const userName = useMemo(() => {
@@ -27,10 +74,23 @@ export default function Chat() {
   ])
   const [prompt, setPrompt] = useState('')
   const [loading, setLoading] = useState(false)
+  const [voiceLanguage, setVoiceLanguage] = useState(recognitionLangFromApp[appLanguage] || 'en-US')
+  const [speakReplies, setSpeakReplies] = useState(true)
+  const [isListening, setIsListening] = useState(false)
 
   const userId = useMemo(() => 'demo-user', [])
 
   const addMessage = (message) => setMessages((current) => [...current, message])
+
+  const speakText = (text) => {
+    if (!window.speechSynthesis || !speakReplies || !text) return
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang = speechLangFromVoice[voiceLanguage] || 'en-US'
+    utterance.rate = 1
+    utterance.pitch = 1
+    window.speechSynthesis.cancel()
+    window.speechSynthesis.speak(utterance)
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -42,9 +102,11 @@ export default function Chat() {
     setLoading(true)
 
     try {
-      const response = await sendAiChat({ userId, prompt, language: appLanguage })
+      const responseLanguage = voiceLanguage === 'auto' ? 'auto' : aiLanguageFromVoice[voiceLanguage] || appLanguage
+      const response = await sendAiChat({ userId, prompt, language: responseLanguage })
       const answer = response.data?.answer || strings.chat.fallbackMessage
       addMessage({ role: 'assistant', content: answer })
+      speakText(answer)
     } catch (error) {
       addMessage({ role: 'assistant', content: strings.chat.errorMessage })
     } finally {
@@ -95,8 +157,30 @@ export default function Chat() {
               />
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-3">
-                  <VoiceButton onTranscript={(text) => setPrompt((current) => `${current} ${text}`)} />
-                  <span className="rounded-full bg-slate-200 px-3 py-2 text-xs font-semibold text-slate-700">{strings.chat.voiceButton}</span>
+                  <VoiceButton
+                    onTranscript={(text) => setPrompt((current) => `${current} ${text}`.trim())}
+                    recognitionLang={voiceLanguage === 'auto' ? (recognitionLangFromApp[appLanguage] || 'en-US') : voiceLanguage}
+                    onListeningChange={setIsListening}
+                  />
+                  <span className="rounded-full bg-slate-200 px-3 py-2 text-xs font-semibold text-slate-700">
+                    {isListening ? 'Listening now' : strings.chat.voiceButton}
+                  </span>
+                  <select
+                    value={voiceLanguage}
+                    onChange={(event) => setVoiceLanguage(event.target.value)}
+                    className="rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700"
+                  >
+                    {voiceLanguageOptions.map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setSpeakReplies((current) => !current)}
+                    className={`rounded-full px-3 py-2 text-xs font-semibold ${speakReplies ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}
+                  >
+                    {speakReplies ? 'Voice reply on' : 'Voice reply off'}
+                  </button>
                 </div>
                 <button
                   type="submit"
