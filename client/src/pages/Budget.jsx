@@ -12,6 +12,7 @@ const initialItems = [
 
 export default function Budget() {
   const { strings, language } = useLanguage()
+  const budgetStrings = strings.budget
   const [budget, setBudget] = useState({ income: 0, expenses: 0, savingsGoal: 0, lineItems: initialItems, history: [] })
   const [status, setStatus] = useState('')
   const [advice, setAdvice] = useState('')
@@ -49,26 +50,26 @@ export default function Budget() {
       total,
       segments: [
         {
-          label: 'Income',
+          label: budgetStrings.pieIncome,
           value: income,
           color: '#22c55e',
           percent: Math.round((income / total) * 100),
         },
         {
-          label: 'Expenses',
+          label: budgetStrings.pieExpenses,
           value: expenses,
           color: '#ef4444',
           percent: Math.round((expenses / total) * 100),
         },
         {
-          label: 'Savings',
+          label: budgetStrings.pieSavings,
           value: savings,
           color: '#3b82f6',
           percent: Math.round((savings / total) * 100),
         },
       ],
     }
-  }, [budget.expenses, budget.income, budget.savingsGoal])
+  }, [budget.expenses, budget.income, budget.savingsGoal, budgetStrings.pieExpenses, budgetStrings.pieIncome, budgetStrings.pieSavings])
 
   const chartData = useMemo(() => {
     const rows = Array.isArray(budget.history) ? [...budget.history] : []
@@ -273,8 +274,8 @@ export default function Budget() {
   }, [budgetBreakdown.segments])
 
   const pieCenterLabel = useMemo(() => {
-    return `${budgetBreakdown.total === 0 ? 0 : Math.round((budgetBreakdown.income / budgetBreakdown.total) * 100)}% income share`
-  }, [budgetBreakdown.income, budgetBreakdown.total])
+    return `${budgetBreakdown.total === 0 ? 0 : Math.round((budgetBreakdown.income / budgetBreakdown.total) * 100)}% ${budgetStrings.incomeShare}`
+  }, [budgetBreakdown.income, budgetBreakdown.total, budgetStrings.incomeShare])
 
   return (
     <div className="min-h-[calc(100vh-96px)] bg-linear-to-br from-fuchsia-50 via-white to-violet-100 px-4 py-6 sm:px-6 lg:px-8">
@@ -286,9 +287,9 @@ export default function Budget() {
                 💹
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-fuchsia-600">Budget builder</p>
-                <h1 className="mt-1 text-2xl font-semibold text-slate-950">Create a budget</h1>
-                <p className="mt-1 text-sm text-slate-500">Track income, savings and expenses in one clean view.</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-fuchsia-600">{budgetStrings.builderLabel}</p>
+                <h1 className="mt-1 text-2xl font-semibold text-slate-950">{budgetStrings.builderTitle}</h1>
+                <p className="mt-1 text-sm text-slate-500">{budgetStrings.builderDescription}</p>
               </div>
             </div>
             <button
@@ -296,16 +297,16 @@ export default function Budget() {
               onClick={handleSave}
               className="inline-flex items-center justify-center rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:from-violet-500 hover:to-fuchsia-500"
             >
-              Save budget
+              {budgetStrings.saveButton}
             </button>
           </div>
 
           <div className="px-6 py-5">
             <div className="grid gap-4 sm:grid-cols-3">
               {[
-                { label: 'Income', active: true },
-                { label: 'Savings', active: true },
-                { label: 'Expenses', active: true },
+                { label: budgetStrings.stepIncome, active: true },
+                { label: budgetStrings.stepSavings, active: true },
+                { label: budgetStrings.stepExpenses, active: true },
               ].map((step, index) => (
                 <div key={step.label} className="flex items-center gap-3">
                   <div className="flex items-center gap-3">
@@ -314,7 +315,7 @@ export default function Budget() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-slate-900">{step.label}</p>
-                      <p className="text-xs text-slate-500">Step {index + 1}</p>
+                      <p className="text-xs text-slate-500">{budgetStrings.stepLabel} {index + 1}</p>
                     </div>
                   </div>
                   {index < 2 && <div className="h-px flex-1 bg-linear-to-r from-violet-300 to-fuchsia-300" />}
@@ -327,22 +328,22 @@ export default function Budget() {
         <section className="grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
           <div className="space-y-6 rounded-4xl bg-white/95 p-6 shadow-[0_24px_80px_rgba(124,58,237,0.10)] ring-1 ring-fuchsia-100">
             <div className="rounded-3xl bg-linear-to-r from-fuchsia-950 via-violet-950 to-indigo-950 px-6 py-5 text-white shadow-lg">
-              <p className="text-xs uppercase tracking-[0.35em] text-fuchsia-200">Step 3</p>
-              <h2 className="mt-2 text-xl font-semibold">Enter your monthly budget details</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Keep the plan simple. Your totals update automatically as you edit each row.</p>
+              <p className="text-xs uppercase tracking-[0.35em] text-fuchsia-200">{budgetStrings.stepLabel} 3</p>
+              <h2 className="mt-2 text-xl font-semibold">{budgetStrings.monthlyDetailsTitle}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-200">{budgetStrings.monthlyDetailsSub}</p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="rounded-3xl bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">Income total</p>
+                <p className="text-sm text-slate-500">{budgetStrings.incomeLabel}</p>
                 <p className="mt-2 text-3xl font-semibold text-slate-900">₹{budget.income}</p>
               </div>
               <div className="rounded-3xl bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">Expenses total</p>
+                <p className="text-sm text-slate-500">{budgetStrings.expensesLabel}</p>
                 <p className="mt-2 text-3xl font-semibold text-slate-900">₹{budget.expenses}</p>
               </div>
               <div className="rounded-3xl bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">Savings goal</p>
+                <p className="text-sm text-slate-500">{budgetStrings.savingsLabel}</p>
                 <p className="mt-2 text-3xl font-semibold text-slate-900">₹{budget.savingsGoal}</p>
               </div>
             </div>
@@ -353,7 +354,7 @@ export default function Budget() {
                   <div className="mb-4 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
-                        {item.type === 'income' ? 'Income' : 'Expense'}
+                        {item.type === 'income' ? budgetStrings.pieIncome : budgetStrings.pieExpenses}
                       </p>
                       <h3 className="mt-1 text-lg font-semibold text-slate-900">{item.category}</h3>
                     </div>
@@ -364,7 +365,7 @@ export default function Budget() {
 
                   <div className="grid gap-4 md:grid-cols-[1.2fr_0.7fr_1fr]">
                     <label className="block">
-                      <span className="text-sm font-medium text-slate-700">Category</span>
+                      <span className="text-sm font-medium text-slate-700">{budgetStrings.categoryLabel}</span>
                       <input
                         value={item.category}
                         onChange={(event) => handleChange(index, 'category', event.target.value)}
@@ -372,7 +373,7 @@ export default function Budget() {
                       />
                     </label>
                     <label className="block">
-                      <span className="text-sm font-medium text-slate-700">Amount</span>
+                      <span className="text-sm font-medium text-slate-700">{budgetStrings.amountLabel}</span>
                       <input
                         type="number"
                         value={item.amount}
@@ -381,7 +382,7 @@ export default function Budget() {
                       />
                     </label>
                     <label className="block">
-                      <span className="text-sm font-medium text-slate-700">Note</span>
+                      <span className="text-sm font-medium text-slate-700">{budgetStrings.noteLabel}</span>
                       <input
                         value={item.note}
                         onChange={(event) => handleChange(index, 'note', event.target.value)}
@@ -395,7 +396,7 @@ export default function Budget() {
 
             <div className="grid gap-4 sm:grid-cols-[1fr_auto]">
               <label className="block">
-                <span className="text-sm font-medium text-slate-700">Savings goal</span>
+                <span className="text-sm font-medium text-slate-700">{budgetStrings.savingsLabel}</span>
                 <input
                   type="number"
                   value={budget.savingsGoal}
@@ -411,7 +412,7 @@ export default function Budget() {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-fuchsia-600 to-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:from-fuchsia-500 hover:to-violet-500"
                 >
                   <span className="text-base">✨</span>
-                  {adviceLoading ? 'Smart Budget Advice...' : 'Smart Budget Advice'}
+                  {adviceLoading ? budgetStrings.smartAdviceLoading : budgetStrings.smartAdviceButton}
                 </button>
                 <button
                   type="button"
@@ -419,7 +420,7 @@ export default function Budget() {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:from-emerald-500 hover:to-teal-500"
                 >
                   <span className="text-base">📊</span>
-                  {businessPlanLoading ? 'Creating Plan...' : 'Create Business Plan'}
+                  {businessPlanLoading ? budgetStrings.createPlanLoading : budgetStrings.createPlanButton}
                 </button>
               </div>
             </div>
@@ -443,8 +444,8 @@ export default function Budget() {
             <div className="rounded-3xl bg-linear-to-br from-violet-950 via-fuchsia-950 to-slate-900 p-5 text-white shadow-lg">
               <div className="mb-5 flex items-center justify-between">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-fuchsia-200">Pie chart</p>
-                  <h2 className="mt-2 text-xl font-semibold">Income / Expenses / Savings</h2>
+                  <p className="text-xs uppercase tracking-[0.35em] text-fuchsia-200">{budgetStrings.pieChartLabel}</p>
+                  <h2 className="mt-2 text-xl font-semibold">{budgetStrings.pieChartTitle}</h2>
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-lg">◔</div>
               </div>
@@ -457,7 +458,7 @@ export default function Budget() {
                   />
                   <div className="absolute inset-7 rounded-full bg-slate-950" />
                   <div className="relative text-center text-white">
-                    <p className="text-xs uppercase tracking-[0.35em] text-fuchsia-200">Budget share</p>
+                    <p className="text-xs uppercase tracking-[0.35em] text-fuchsia-200">{budgetStrings.budgetShare}</p>
                     <p className="mt-2 text-2xl font-bold">₹{budgetBreakdown.total}</p>
                     <p className="mt-1 text-xs text-slate-300">{pieCenterLabel}</p>
                   </div>
@@ -481,18 +482,18 @@ export default function Budget() {
             </div>
 
             <div className={`rounded-3xl p-5 ${planIsFeasible ? 'bg-emerald-50' : 'bg-rose-50'}`}>
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Plan status</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">{budgetStrings.planStatus}</p>
               <p className={`mt-3 text-3xl font-semibold ${planIsFeasible ? 'text-emerald-700' : 'text-rose-700'}`}>
-                {planIsFeasible ? 'Profitable' : 'Loss'}
+                {planIsFeasible ? budgetStrings.profitable : budgetStrings.loss}
               </p>
               <p className="mt-2 text-sm text-slate-600">
-                Remaining after savings: ₹{remainingBalance}
+                {budgetStrings.remainingAfterSavings}: ₹{remainingBalance}
               </p>
             </div>
 
             {!planIsFeasible && (
               <div className="rounded-3xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-                Your current plan is not feasible. Reduce expenses or savings goal, or increase income.
+                {budgetStrings.infeasibleWarning}
               </div>
             )}
           </aside>
@@ -500,17 +501,17 @@ export default function Budget() {
 
         <section className="rounded-4xl bg-white/95 p-6 shadow-[0_24px_80px_rgba(124,58,237,0.08)] ring-1 ring-fuchsia-100">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-xl font-semibold text-slate-900">Monthly history (last 6 saves)</h2>
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Income vs expenses vs savings</span>
+            <h2 className="text-xl font-semibold text-slate-900">{budgetStrings.monthlyHistoryTitle}</h2>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{budgetStrings.monthlyHistorySub}</span>
           </div>
 
           {chartData.length === 0 ? (
-            <p className="mt-4 text-sm text-slate-500">Save your budget to start seeing history trends.</p>
+            <p className="mt-4 text-sm text-slate-500">{budgetStrings.monthlyHistoryEmpty}</p>
           ) : (
             <div className="mt-6 overflow-x-auto">
               <div className="flex min-w-160 items-end gap-6 pb-2">
                 {chartData.map((item, index) => {
-                  const monthLabel = item.monthKey || `Entry ${index + 1}`
+                  const monthLabel = item.monthKey || `${budgetStrings.entryLabel} ${index + 1}`
                   const incomeHeight = Math.max(((item.income || 0) / maxChartValue) * 120, 4)
                   const expenseHeight = Math.max(((item.expenses || 0) / maxChartValue) * 120, 4)
                   const savingsHeight = Math.max(((item.savingsGoal || 0) / maxChartValue) * 120, 4)
@@ -518,9 +519,9 @@ export default function Budget() {
                   return (
                     <div key={`${monthLabel}-${index}`} className="w-24">
                       <div className="flex h-36 items-end justify-center gap-2 rounded-[1.25rem] bg-slate-50 px-2 py-3">
-                        <div className="w-4 rounded bg-emerald-500" style={{ height: `${incomeHeight}px` }} title={`Income: ₹${item.income || 0}`} />
-                        <div className="w-4 rounded bg-rose-500" style={{ height: `${expenseHeight}px` }} title={`Expenses: ₹${item.expenses || 0}`} />
-                        <div className="w-4 rounded bg-sky-500" style={{ height: `${savingsHeight}px` }} title={`Savings: ₹${item.savingsGoal || 0}`} />
+                        <div className="w-4 rounded bg-emerald-500" style={{ height: `${incomeHeight}px` }} title={`${budgetStrings.pieIncome}: ₹${item.income || 0}`} />
+                        <div className="w-4 rounded bg-rose-500" style={{ height: `${expenseHeight}px` }} title={`${budgetStrings.pieExpenses}: ₹${item.expenses || 0}`} />
+                        <div className="w-4 rounded bg-sky-500" style={{ height: `${savingsHeight}px` }} title={`${budgetStrings.pieSavings}: ₹${item.savingsGoal || 0}`} />
                       </div>
                       <p className="mt-2 truncate text-center text-xs font-medium text-slate-600">{monthLabel}</p>
                     </div>
@@ -528,9 +529,9 @@ export default function Budget() {
                 })}
               </div>
               <div className="mt-4 flex flex-wrap gap-4 text-xs text-slate-600">
-                <span className="inline-flex items-center gap-2"><span className="h-3 w-3 rounded bg-emerald-500" />Income</span>
-                <span className="inline-flex items-center gap-2"><span className="h-3 w-3 rounded bg-rose-500" />Expenses</span>
-                <span className="inline-flex items-center gap-2"><span className="h-3 w-3 rounded bg-sky-500" />Savings</span>
+                <span className="inline-flex items-center gap-2"><span className="h-3 w-3 rounded bg-emerald-500" />{budgetStrings.pieIncome}</span>
+                <span className="inline-flex items-center gap-2"><span className="h-3 w-3 rounded bg-rose-500" />{budgetStrings.pieExpenses}</span>
+                <span className="inline-flex items-center gap-2"><span className="h-3 w-3 rounded bg-sky-500" />{budgetStrings.pieSavings}</span>
               </div>
             </div>
           )}

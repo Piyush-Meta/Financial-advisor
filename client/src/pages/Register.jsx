@@ -22,12 +22,12 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (!form.email || !form.password) {
-      setStatus('Please enter your email and password.')
+      setStatus(strings.register.missingFields || 'Please enter your email and password.')
       return
     }
 
     setLoading(true)
-    setStatus('Creating account...')
+    setStatus(strings.register.creatingAccount || 'Creating account...')
 
     try {
       const response = await registerUser(form)
@@ -38,7 +38,7 @@ export default function Register() {
       setStatus(strings.register.successMessage)
       navigate('/')
     } catch (error) {
-      const errorMessage = error?.response?.data?.error || error.message || 'Unable to register.'
+      const errorMessage = error?.response?.data?.error || error.message || strings.register.errorMessage || 'Unable to register.'
       setStatus(errorMessage)
     } finally {
       setLoading(false)
@@ -80,7 +80,7 @@ export default function Register() {
                   type="text"
                   value={form.name}
                   onChange={(event) => handleChange('name', event.target.value)}
-                  placeholder="Your name"
+                  placeholder={strings.register.namePlaceholder}
                   className="mt-3 w-full rounded-3xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-300/40"
                   required
                 />
@@ -91,7 +91,7 @@ export default function Register() {
                   type="email"
                   value={form.email}
                   onChange={(event) => handleChange('email', event.target.value)}
-                  placeholder="name@example.com"
+                  placeholder={strings.register.emailPlaceholder}
                   className="mt-3 w-full rounded-3xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-300/40"
                   required
                 />
@@ -102,7 +102,7 @@ export default function Register() {
                   type="password"
                   value={form.password}
                   onChange={(event) => handleChange('password', event.target.value)}
-                  placeholder="********"
+                  placeholder={strings.register.passwordPlaceholder}
                   className="mt-3 w-full rounded-3xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-300/40"
                   required
                 />

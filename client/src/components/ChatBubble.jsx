@@ -1,4 +1,7 @@
+import { useLanguage } from '../contexts/LanguageContext.jsx'
+
 export default function ChatBubble({ role, content }) {
+  const { strings } = useLanguage()
   const isAssistant = role === 'assistant'
   return (
     <div
@@ -9,7 +12,7 @@ export default function ChatBubble({ role, content }) {
       }`}
     >
       <p className={`text-xs uppercase tracking-[0.2em] ${isAssistant ? 'text-fuchsia-300' : 'text-fuchsia-600'}`}>
-        {isAssistant ? 'Advisor' : 'You'}
+        {isAssistant ? strings.common.advisor : strings.common.you}
       </p>
       <p className="mt-3 whitespace-pre-line text-sm leading-7">{content}</p>
     </div>

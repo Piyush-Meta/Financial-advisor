@@ -9,7 +9,9 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import SplashScreen from './pages/SplashScreen.jsx'
+import Footer from './components/Footer.jsx'
 import { LanguageProvider } from './contexts/LanguageContext.jsx'
+import { VoiceProvider } from './contexts/VoiceContext.jsx'
 
 function App() {
   const [showSplash, setShowSplash] = useState(() => {
@@ -20,24 +22,29 @@ function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
-        <div className="min-h-screen w-full bg-[#fff0fb] text-slate-900">
-          <Navbar />
-          {showSplash ? (
-            <SplashScreen onComplete={() => setShowSplash(false)} />
-          ) : (
-            <main className="w-full px-4 pb-16 pt-6 sm:px-6 lg:px-8">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/budget" element={<Budget />} />
-                <Route path="/business" element={<Business />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-              </Routes>
-            </main>
-          )}
-        </div>
+        <VoiceProvider>
+          <div className="min-h-screen w-full bg-[#fff0fb] text-slate-900">
+            <Navbar />
+            {showSplash ? (
+              <SplashScreen onComplete={() => setShowSplash(false)} />
+            ) : (
+              <>
+                <main className="w-full px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/chat" element={<Chat />} />
+                    <Route path="/budget" element={<Budget />} />
+                    <Route path="/business" element={<Business />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </>
+            )}
+          </div>
+        </VoiceProvider>
       </BrowserRouter>
     </LanguageProvider>
   )

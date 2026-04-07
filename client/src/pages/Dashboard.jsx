@@ -3,38 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext.jsx'
 import namasteImage from '../assets/namaste.png'
 
-const dashboardCards = [
-  {
-    title: 'AI assistant',
-    description: 'Ask questions, get tailored advice, and receive instant financial help with your personal assistant.',
-    to: '/chat',
-  },
-  {
-    title: 'Money overview',
-    description: 'Track your balances, savings goals, and spending insights in one easy dashboard.',
-    to: '/budget',
-  },
-  {
-    title: 'Business suggestions',
-    description: 'Receive practical business ideas and growth tips for your small enterprise.',
-    to: '/business',
-  },
-  {
-    title: 'Learning cards',
-    description: 'Review simple, actionable financial lessons curated for your next steps.',
-    to: '/chat',
-  },
-  {
-    title: 'Voice interaction',
-    description: 'Use voice commands to interact with the system and get hands-free guidance.',
-    to: '/chat',
-  },
-]
-
 export default function Dashboard() {
   const { strings } = useLanguage()
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
+  const dashboard = strings.dashboard
 
   useEffect(() => {
     const stored = localStorage.getItem('sakhi-user')
@@ -63,10 +36,10 @@ export default function Dashboard() {
         <div className="rounded-4xl bg-white/95 p-10 shadow-2xl ring-1 ring-fuchsia-100">
           <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-fuchsia-600">Dashboard</p>
-              <h1 className="mt-3 text-4xl font-semibold text-slate-950">Your financial hub</h1>
+              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-fuchsia-600">{dashboard.title}</p>
+              <h1 className="mt-3 text-4xl font-semibold text-slate-950">{dashboard.title}</h1>
               <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
-                {user ? `Hello ${user.name || user.email}, here are your latest tools and insights.` : 'Loading your dashboard...' }
+                {user ? dashboard.greeting.replace('{name}', user.name || user.email || 'Sakhi') : dashboard.loading}
               </p>
             </div>
             <div className="flex items-center justify-center">
@@ -81,14 +54,14 @@ export default function Dashboard() {
             <div />
             <div className="flex flex-col gap-3 sm:items-end">
               <span className="rounded-full bg-fuchsia-50 px-4 py-2 text-sm font-semibold text-fuchsia-700 shadow-sm">
-                Signed in as {user?.name || user?.email || 'guest'}
+                {dashboard.signedInAs.replace('{name}', user?.name || user?.email || 'guest')}
               </span>
             </div>
           </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {dashboardCards.map((card) => (
+          {dashboard.cards.map((card) => (
             <button
               key={card.title}
               type="button"
@@ -105,62 +78,38 @@ export default function Dashboard() {
 
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <section className="rounded-4xl bg-white p-8 shadow-xl ring-1 ring-fuchsia-100">
-            <h2 className="text-2xl font-semibold text-slate-950">Your latest activity</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">Quick access to the tools you need most after signing in.</p>
+            <h2 className="text-2xl font-semibold text-slate-950">{dashboard.activityTitle}</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">{dashboard.activityDescription}</p>
             <ul className="mt-8 space-y-4">
-              <li className="flex items-start gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-fuchsia-600 text-sm font-semibold text-white">AI</span>
-                <div>
-                  <h3 className="text-base font-semibold text-slate-950">AI assistant</h3>
-                  <p className="mt-1 text-sm text-slate-600">Ask your personalized finance coach for advice anytime.</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-600 text-sm font-semibold text-white">$</span>
-                <div>
-                  <h3 className="text-base font-semibold text-slate-950">Money overview</h3>
-                  <p className="mt-1 text-sm text-slate-600">Review your overall balance, spending, and savings goals.</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-600 text-sm font-semibold text-white">B</span>
-                <div>
-                  <h3 className="text-base font-semibold text-slate-950">Business suggestions</h3>
-                  <p className="mt-1 text-sm text-slate-600">Get actionable ideas and tips for your business growth.</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-violet-600 text-sm font-semibold text-white">L</span>
-                <div>
-                  <h3 className="text-base font-semibold text-slate-950">Learning cards</h3>
-                  <p className="mt-1 text-sm text-slate-600">Browse quick learning tips that strengthen your financial skills.</p>
-                </div>
-              </li>
-              <li className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                <div className="flex items-start gap-4">
-                  <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-pink-600 text-sm font-semibold text-white">V</span>
-                  <div>
-                    <h3 className="text-base font-semibold text-slate-950">Voice interaction</h3>
-                    <p className="mt-1 text-sm text-slate-600">Use voice commands to interact with your dashboard hands-free.</p>
+              {dashboard.activityItems.map((item) => (
+                <li key={item.title} className={item.helperTitle ? 'flex flex-col gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5' : 'flex items-start gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5'}>
+                  <div className={item.helperTitle ? 'flex items-start gap-4' : 'flex items-start gap-4'}>
+                    <span className={`mt-1 inline-flex h-10 w-10 items-center justify-center rounded-2xl ${item.color} text-sm font-semibold text-white`}>{item.badge}</span>
+                    <div>
+                      <h3 className="text-base font-semibold text-slate-950">{item.title}</h3>
+                      <p className="mt-1 text-sm text-slate-600">{item.description}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-sm">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-fuchsia-600 text-white text-lg">🤖</div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-950">How can I help you?</p>
-                    <p className="text-xs text-slate-500">Ask the assistant to start voice chat.</p>
-                  </div>
-                </div>
-              </li>
+                  {item.helperTitle && (
+                    <div className="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-sm">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-fuchsia-600 text-white text-lg">🤖</div>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-950">{item.helperTitle}</p>
+                        <p className="text-xs text-slate-500">{item.helperDescription}</p>
+                      </div>
+                    </div>
+                  )}
+                </li>
+              ))}
             </ul>
           </section>
 
           <aside className="rounded-4xl bg-fuchsia-950 p-8 text-white shadow-2xl ring-1 ring-fuchsia-100">
-            <h2 className="text-2xl font-semibold">Need help?</h2>
-            <p className="mt-4 text-sm leading-6 text-fuchsia-200">Visit the AI assistant anytime or use the voice interaction feature to get instant guidance.</p>
+            <h2 className="text-2xl font-semibold">{dashboard.helpTitle}</h2>
+            <p className="mt-4 text-sm leading-6 text-fuchsia-200">{dashboard.helpDescription}</p>
             <div className="mt-8 space-y-4 rounded-3xl bg-white/10 p-6">
-              <p className="text-sm font-semibold text-white">Tip</p>
-              <p className="text-sm leading-6 text-fuchsia-100">Start with the AI assistant if you want help creating a budget or exploring new business ideas.</p>
+              <p className="text-sm font-semibold text-white">{dashboard.helpTipTitle}</p>
+              <p className="text-sm leading-6 text-fuchsia-100">{dashboard.helpTipDescription}</p>
             </div>
           </aside>
         </div>
@@ -168,14 +117,14 @@ export default function Dashboard() {
         <div className="rounded-4xl bg-white/95 p-8 shadow-2xl ring-1 ring-fuchsia-100">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">Account actions</h2>
-              <p className="mt-2 text-sm text-slate-600">Use the button below when you are ready to sign out.</p>
+              <h2 className="text-xl font-semibold text-slate-950">{dashboard.accountActionsTitle}</h2>
+              <p className="mt-2 text-sm text-slate-600">{dashboard.accountActionsDescription}</p>
             </div>
             <button
               onClick={handleLogout}
               className="rounded-full bg-fuchsia-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-fuchsia-500"
             >
-              Sign out
+              {dashboard.signOutButton}
             </button>
           </div>
         </div>

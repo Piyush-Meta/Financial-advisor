@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useLanguage } from '../contexts/LanguageContext.jsx'
 import namaste from '../assets/namaste.png'
 
 export default function SplashScreen({ onComplete }) {
+  const { strings } = useLanguage()
   const navigate = useNavigate()
   const [stage, setStage] = useState(0)
 
@@ -34,20 +36,20 @@ export default function SplashScreen({ onComplete }) {
         <div className="space-y-6">
           <div className="relative h-24">
             <span className={`absolute inset-0 flex items-center justify-center text-5xl font-black uppercase tracking-[0.35em] transition-all duration-700 ${stage === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-              Welcome
+              {strings.splash.welcome}
             </span>
             <span className={`absolute inset-0 flex items-center justify-center text-5xl font-black uppercase tracking-[0.35em] transition-all duration-700 ${stage === 1 ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-              Namaste 🙏
+              {strings.splash.namaste}
             </span>
           </div>
 
           <p className="mx-auto max-w-2xl text-sm leading-7 text-slate-200 sm:text-base">
-            A gentle guide for your first visit — personalized, warm, and built for the way you manage money.
+            {strings.splash.subtitle}
           </p>
         </div>
 
         <div className={`relative flex h-72 w-72 items-center justify-center overflow-hidden rounded-4xl border border-white/15 bg-slate-950/85 p-6 shadow-2xl transition-all duration-700 ${stage === 2 ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-          <img src={namaste} alt="Welcome illustration" className="h-full w-full rounded-4xl object-cover" />
+          <img src={namaste} alt={strings.splash.imageAlt} className="h-full w-full rounded-4xl object-cover" />
         </div>
       </div>
     </div>

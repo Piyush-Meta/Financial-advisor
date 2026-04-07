@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 
-export default function VoiceButton({ onTranscript, recognitionLang = 'en-US', onListeningChange }) {
+const VoiceButton = forwardRef(function VoiceButton({ onTranscript, recognitionLang = 'en-US', onListeningChange }, ref) {
   const [supported, setSupported] = useState(false)
   const [listening, setListening] = useState(false)
   const recognitionRef = useRef(null)
@@ -78,6 +78,40 @@ export default function VoiceButton({ onTranscript, recognitionLang = 'en-US', o
     }
   }, [recognitionLang])
 
+  const stopListening = () => {
+    const recognition = recognitionRef.current
+    if (!recognition) return
+
+    keepListeningRef.current = false
+    try {
+      recognition.stop()
+    } catch {
+      // Ignore stop errors.
+    }
+    setListening(false)
+    if (onListeningChangeRef.current) onListeningChangeRef.current(false)
+  }
+
+  const startListening = () => {
+    const recognition = recognitionRef.current
+    if (!recognition) {
+      window.alert(
+        'Voice recognition is not supported in this browser. Please use Chrome or Edge on desktop/mobile, or try again in a supported browser.'
+      )
+      return
+    }
+
+    keepListeningRef.current = true
+    try {
+      recognition.lang = recognitionLang
+      recognition.start()
+      setListening(true)
+      if (onListeningChangeRef.current) onListeningChangeRef.current(true)
+    } catch {
+      // Ignore start race conditions.
+    }
+  }
+
   const toggleListening = () => {
     const recognition = recognitionRef.current
     if (!recognition) {
@@ -88,18 +122,21 @@ export default function VoiceButton({ onTranscript, recognitionLang = 'en-US', o
     }
 
     if (listening) {
-      keepListeningRef.current = false
-      recognition.stop()
-      setListening(false)
-      if (onListeningChangeRef.current) onListeningChangeRef.current(false)
+      stopListening()
     } else {
-      keepListeningRef.current = true
-      recognition.lang = recognitionLang
-      recognition.start()
-      setListening(true)
-      if (onListeningChangeRef.current) onListeningChangeRef.current(true)
+      startListening()
     }
   }
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      startListening,
+      stopListening,
+      toggleListening,
+    }),
+    [listening, recognitionLang]
+  )
 
   return (
     <button
@@ -113,4 +150,6 @@ export default function VoiceButton({ onTranscript, recognitionLang = 'en-US', o
       {listening ? 'Listening...' : supported ? 'Use voice' : 'Voice unavailable'}
     </button>
   )
-}
+})
+
+export default VoiceButton

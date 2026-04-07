@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext.jsx'
+import { useVoiceCommands } from '../contexts/VoiceCommandContext.jsx'
+import LanguageSelector from './LanguageSelector.jsx'
 
 export default function Navbar() {
   const { strings } = useLanguage()
+  const { supported, enabled, listening, mode, setMode, toggle, startPushToTalk, stopPushToTalk, lastCommand } = useVoiceCommands()
   const location = useLocation()
   const navigate = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem('sakhi-token')))
@@ -64,22 +67,59 @@ export default function Navbar() {
 
         <div className="flex flex-wrap items-center gap-3">
           <div className="hidden lg:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300">
-            <span className="text-slate-400">Search</span>
+            <span className="text-slate-400">{strings.common.search}</span>
           </div>
+          <LanguageSelector className="hidden sm:inline-flex" />
+          <button
+            type="button"
+            onClick={toggle}
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
+              enabled
+                ? 'bg-emerald-500 text-white shadow-lg hover:bg-emerald-400'
+                : 'bg-white/10 text-white hover:bg-white/20'
+            }`}
+            title={supported ? (enabled ? 'Turn off voice commands' : 'Turn on voice commands') : 'Voice commands not supported'}
+          >
+            <span>{enabled ? '🎙️' : '🎤'}</span>
+            <span>{enabled ? (listening ? 'Voice active' : 'Voice ready') : 'Voice off'}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode(mode === 'continuous' ? 'push' : 'continuous')}
+            className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:bg-white/20"
+            title="Switch voice mode"
+          >
+            <span>{mode === 'continuous' ? 'Always listening' : 'Push-to-talk'}</span>
+          </button>
+          <button
+            type="button"
+            onMouseDown={startPushToTalk}
+            onMouseUp={stopPushToTalk}
+            onMouseLeave={stopPushToTalk}
+            onTouchStart={startPushToTalk}
+            onTouchEnd={stopPushToTalk}
+            onTouchCancel={stopPushToTalk}
+            className="inline-flex items-center gap-2 rounded-full bg-cyan-500 px-4 py-2 text-xs font-semibold text-slate-950 transition hover:bg-cyan-400"
+            title="Hold to speak"
+            disabled={!supported}
+          >
+            <span>Hold mic</span>
+          </button>
+          <span className={`inline-flex h-3 w-3 rounded-full ${listening ? 'animate-pulse bg-emerald-400' : 'bg-slate-500'}`} />
           {isLoggedIn ? (
             <div className="flex items-center gap-3">
               <NavLink
                 to="/dashboard"
                 className="rounded-full bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
               >
-                Dashboard
+                {strings.common.dashboard}
               </NavLink>
               <button
                 type="button"
                 onClick={handleSignOut}
                 className="rounded-full bg-fuchsia-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-fuchsia-500"
               >
-                Sign out
+                {strings.common.signOut}
               </button>
             </div>
           ) : (
@@ -87,10 +127,15 @@ export default function Navbar() {
               to="/login"
               className="rounded-full bg-fuchsia-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-fuchsia-500"
             >
-              Sign in
+              {strings.common.signIn}
             </NavLink>
           )}
         </div>
+        {enabled && lastCommand && (
+          <div className="w-full text-right text-[11px] text-slate-400 sm:-mt-1">
+            Last command: {lastCommand}
+          </div>
+        )}
       </div>
     </header>
   )

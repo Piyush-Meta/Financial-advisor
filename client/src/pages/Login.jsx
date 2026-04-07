@@ -24,12 +24,12 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (!form.email || !form.password) {
-      setStatus('Please enter both email and password.')
+      setStatus(strings.login.missingFields || 'Please enter both email and password.')
       return
     }
 
     setLoading(true)
-    setStatus('Signing in...')
+    setStatus(strings.login.signingIn || 'Signing in...')
 
     try {
       const response = await loginUser(form)
@@ -40,7 +40,7 @@ export default function Login() {
       setStatus(strings.login.successMessage)
       navigate('/')
     } catch (error) {
-      const errorMessage = error?.response?.data?.error || error.message || 'Unable to sign in.'
+      const errorMessage = error?.response?.data?.error || error.message || strings.login.errorMessage || 'Unable to sign in.'
       setStatus(errorMessage)
     } finally {
       setLoading(false)
@@ -92,7 +92,7 @@ export default function Login() {
                   type="email"
                   value={form.email}
                   onChange={(event) => handleChange('email', event.target.value)}
-                  placeholder="name@example.com"
+                  placeholder={strings.login.emailPlaceholder}
                   className="mt-3 w-full rounded-3xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-300/40"
                   required
                 />
@@ -103,7 +103,7 @@ export default function Login() {
                   type="password"
                   value={form.password}
                   onChange={(event) => handleChange('password', event.target.value)}
-                  placeholder="********"
+                  placeholder={strings.login.passwordPlaceholder}
                   className="mt-3 w-full rounded-3xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-300/40"
                   required
                 />

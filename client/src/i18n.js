@@ -1,418 +1,393 @@
 export const languageNames = {
-  en: 'English',
   hi: 'हिन्दी',
+  en: 'English',
+  bn: 'বাংলা',
+  te: 'తెలుగు',
+  mr: 'मराठी',
+  ta: 'தமிழ்',
+  ur: 'اردو',
+  gu: 'ગુજરાતી',
+  kn: 'ಕನ್ನಡ',
   od: 'ଓଡ଼ିଆ',
+  ml: 'മലയാളം',
+  pa: 'ਪੰਜਾਬੀ',
+  as: 'অসমীয়া',
+  mai: 'मैथिली',
+  sat: 'ᱥᱟᱱᱛᱟᱲᱤ',
+  ks: 'कॉशुर',
+  ne: 'नेपाली',
+  kok: 'कोंकणी',
+  sd: 'سنڌي',
+  doi: 'डोगरी',
+  mni: 'মণিপুরী',
+  brx: 'बड़ो',
+  sa: 'संस्कृतम्',
+}
+
+export const rtlLanguages = new Set(['ur', 'ks', 'sd'])
+
+const baseHi = {
+  common: {
+    appName: 'Sakhi Finance',
+    you: 'आप',
+    advisor: 'सलाहकार',
+    guest: 'मेहमान',
+    search: 'खोजें',
+    dashboard: 'डैशबोर्ड',
+    signIn: 'लॉगिन',
+    signOut: 'साइन आउट',
+    loading: 'लोड हो रहा है...',
+    save: 'सहेजें',
+    cancel: 'रद्द करें',
+    language: 'भाषा',
+  },
+  nav: {
+    home: 'होम',
+    chat: 'चैट',
+    budget: 'बजट',
+    business: 'निवेश',
+    login: 'लॉगिन',
+  },
+  footer: {
+    tagline: 'ग्रामीण महिलाओं के लिए स्मार्ट वित्तीय साथी',
+    rights: 'सभी अधिकार सुरक्षित।',
+  },
+  splash: {
+    welcome: 'स्वागत है',
+    namaste: 'नमस्ते 🙏',
+    subtitle: 'पहली यात्रा के लिए एक सौम्य मार्गदर्शक। व्यक्तिगत, भरोसेमंद, और आपके पैसे की समझ के अनुसार बनाया गया।',
+    imageAlt: 'स्वागत चित्र',
+  },
+  home: {
+    badgeLoggedIn: 'वापसी पर स्वागत है',
+    badgeGuest: 'ग्रामीण निर्माताओं के लिए स्मार्ट वित्त',
+    title: 'ऐसे वित्तीय उपकरण जो प्रीमियम, व्यक्तिगत और शक्तिशाली महसूस हों।',
+    description: 'AI-आधारित सलाह, बहुभाषी वॉयस मार्गदर्शन, और व्यवसाय योजना उपकरण।',
+    primaryLoggedIn: 'डैशबोर्ड खोलें',
+    primaryGuest: 'शुरू करें',
+    secondary: 'विशेषताएं देखें',
+    metrics: ['वॉयस + टेक्स्ट मार्गदर्शन', 'बिज़नेस प्लान जनरेटर', 'बजट योजना केंद्र'],
+    growthScore: 'विकास स्कोर',
+    aiReady: 'AI तैयार',
+    planTag: 'वॉयस, चैट, योजना',
+    floatingBrand: 'Sakhifinance',
+    floatingTitle: 'ऐसा AI वित्त जो सामान्य नहीं, बल्कि तैयार किया हुआ लगे।',
+    floatingDescription: 'वॉयस का उपयोग करें, व्यवसाय योजनाएँ बनाएं, बचत जांचें, और एक परिष्कृत इंटरफ़ेस में सलाह देखें।',
+    dailyAdvice: 'दैनिक सलाह',
+    savingsPlan: 'बचत योजना',
+    languageSelector: 'भाषा चयनकर्ता',
+    featureCards: [
+      {
+        title: 'स्मार्ट बचत योजना',
+        text: 'एक सरल बजट बनाएं जो बचत को पहले रखे और खर्च को नियंत्रण में रखे।',
+        accent: 'from-emerald-500 to-teal-500',
+      },
+      {
+        title: 'वॉयस-फर्स्ट मार्गदर्शन',
+        text: 'स्वाभाविक रूप से प्रश्न पूछें और अपनी पसंदीदा भाषा में तुरंत मदद पाएं।',
+        accent: 'from-fuchsia-500 to-violet-500',
+      },
+      {
+        title: 'व्यवसाय वृद्धि विचार',
+        text: 'डेयरी, सिलाई और स्थानीय व्यापार के लिए व्यावहारिक सलाह पाएं।',
+        accent: 'from-sky-500 to-indigo-500',
+      },
+    ],
+    capabilitiesTitle: 'AI क्षमताएँ',
+    capabilitiesHeading: 'वॉयस, योजना और व्यावहारिक व्यवसाय सलाह के लिए बनाया गया।',
+    capabilitiesSub: 'हैकथॉन मूल्यांकन के लिए पर्याप्त मजबूत, रोज़मर्रा के उपयोग के लिए पर्याप्त सरल।',
+    aiCapabilities: [
+      { title: 'बहुभाषी वॉयस इनपुट', text: 'अंग्रेज़ी, हिंदी, ओड़िया और अन्य भाषाओं में बोलें।', icon: '🎙️' },
+      { title: 'स्थानीय भाषा उत्तर', text: 'सहायक चयनित भाषा में मूल लिपि का उपयोग करके उत्तर देता है।', icon: '🌐' },
+      { title: 'वित्त-केंद्रित सुझाव', text: 'उत्तर लाभ, लागत कमी, बचत और व्यावहारिक अगले कदमों पर केंद्रित रहते हैं।', icon: '📊' },
+    ],
+    howTitle: 'यह कैसे काम करता है',
+    howHeading: 'बेहतर निर्णयों के लिए तीन सरल चरण।',
+    steps: [
+      { title: 'अपनी भाषा चुनें', text: 'ऊपर दिए गए चयनकर्ता से अपनी पसंदीदा भाषा चुनें।' },
+      { title: 'आवाज़ या टेक्स्ट से पूछें', text: 'अपने व्यवसाय या खर्च के बारे में बोलें या टाइप करें।' },
+      { title: 'स्पष्ट मार्गदर्शन पर काम करें', text: 'सलाह का उपयोग करके लाभ बढ़ाएं और बचत सुरक्षित रखें।' },
+    ],
+    footerTitle: 'कार्रवाई',
+    footerHeading: 'क्या आप एक समझदार धन प्रवाह बनाना तैयार हैं?',
+    footerDescription: 'चैट में जाएँ, व्यवसाय योजना बनाएँ, या अपने डैशबोर्ड में आगे बढ़ें।',
+    footerPrimaryLoggedIn: 'डैशबोर्ड खोलें',
+    footerPrimaryGuest: 'शुरू करें',
+    footerSecondary: 'चैट पर जाएँ',
+  },
+  chat: {
+    title: 'AI मार्गदर्शक',
+    pageTitle: 'अपने वित्तीय मार्गदर्शक से बात करें',
+    description: 'सरल भाषा में अपने वित्तीय मार्गदर्शक से बात करें।',
+    placeholder: 'बचत, बजट, डेयरी व्यवसाय या खर्च प्रबंधन पर प्रश्न पूछें।',
+    sendButton: 'संदेश भेजें',
+    listening: 'सुन रहा है...',
+    voiceButton: 'वॉयस का उपयोग करें',
+    languageLabel: 'भाषा',
+    initialMessage: 'नमस्ते सख़ी! बताइए आज किस मदद की ज़रूरत है।',
+    errorMessage: 'सलाहकार से कनेक्ट करने में त्रुटि हुई। कृपया फिर से प्रयास करें।',
+    fallbackMessage: 'क्षमा करें, मैं अभी सलाहकार तक नहीं पहुंच पाया।',
+    advisorLabel: 'सलाहकार',
+    advisorGreeting: 'नमस्ते {name}! बताइए आज किस मदद की ज़रूरत है।',
+    liveLabel: 'लाइव',
+    thinking: 'व्यवसाय और वित्त सलाह तैयार की जा रही है...',
+    quickTopics: 'त्वरित विषय',
+    quickTopicsSub: 'किसी विषय से तुरंत बातचीत शुरू करें।',
+    clearHistory: 'चैट इतिहास साफ करें',
+    listeningNow: 'अभी सुन रहा है',
+    autoVoice: 'स्वतः आवाज़',
+    voiceReplyOn: 'वॉयस उत्तर चालू',
+    voiceReplyOff: 'वॉयस उत्तर बंद',
+    resumeVoice: 'वॉयस जारी रखें',
+    pauseVoice: 'वॉयस रोकें',
+    stopVoice: 'वॉयस बंद करें',
+    voiceHelperTitle: 'वॉयस चैट सहायक',
+    voiceHelperHeading: 'मैं आपकी कैसे मदद कर सकता हूँ?',
+    voiceHelperSub: 'आवाज़ या टाइप से तुरंत मार्गदर्शन प्राप्त करें।',
+    assistantCardTitle: 'AI वॉयस सहायक',
+    assistantCardSub: 'कहें “मेरा बजट दिखाओ” या “मैं अधिक कैसे बचत करूँ?”',
+    quickActionsTitle: 'त्वरित कार्य',
+    quickActions: ['बचत योजना शुरू करें', 'खर्च प्रवृत्तियाँ जांचें', 'व्यवसाय सुझाव पूछें'],
+    topics: [
+      'मैं अपने व्यवसाय की आय से अधिक कैसे बचा सकता हूँ?',
+      'डेयरी आय और खर्च के लिए बजट बनाने में मदद करें।',
+      'कम पैसे में कौन सा छोटा व्यवसाय शुरू कर सकता हूँ?',
+      'सुरक्षित माइक्रो-निवेश विचार बताइए।',
+      'मैं दैनिक खर्च कैसे कम करूँ और आपातकाल के लिए बचत कैसे करूँ?',
+    ],
+  },
+  login: {
+    welcomeBadge: 'वापसी पर स्वागत है',
+    title: 'आपकी वित्तीय यात्रा के लिए सुरक्षित साइन इन',
+    subtitle: 'अपने खाते तक पहुंचें और विश्वसनीय बचत, बजट और निवेश योजनाओं को आगे बढ़ाएं।',
+    feature1: { title: 'शानदार अनुभव', description: 'एक शांत, पेशेवर लॉगिन फ़्लो।' },
+    feature2: { title: 'तेज़ पहुँच', description: 'ईमेल के साथ त्वरित साइन इन करें और अपने डैशबोर्ड पर लौटें।' },
+    signIn: 'Sakhi Finance में साइन इन करें',
+    signInDesc: 'ईमेल और पासवर्ड से अपने खाते में लॉगिन करें।',
+    email: 'ईमेल पता',
+    password: 'पासवर्ड',
+    emailPlaceholder: 'name@example.com',
+    passwordPlaceholder: '********',
+    loginButton: 'जारी रखें',
+    successMessage: 'सफलतापूर्वक लॉगिन हुआ।',
+    forgotText: 'पासवर्ड भूल गए? रिकवरी विकल्प बाद में जोड़ा जा सकता है।',
+    missingFields: 'कृपया ईमेल और पासवर्ड दोनों दर्ज करें।',
+    signingIn: 'साइन इन हो रहा है...',
+    errorMessage: 'साइन इन नहीं हो सका।',
+  },
+  register: {
+    banner: 'नया खाता',
+    title: 'अपना Sakhi Finance प्रोफ़ाइल बनाएं',
+    subtitle: 'व्यक्तिगत बचत, बजट और निवेश योजना के लिए अभी रजिस्टर करें।',
+    heading: 'खाता बनाएं',
+    description: 'नाम, ईमेल और सुरक्षित पासवर्ड से शुरुआत करें।',
+    name: 'पूरा नाम',
+    email: 'ईमेल पता',
+    password: 'पासवर्ड',
+    namePlaceholder: 'आपका नाम',
+    emailPlaceholder: 'name@example.com',
+    passwordPlaceholder: '********',
+    registerButton: 'खाता बनाएं',
+    successMessage: 'रजिस्ट्रेशन सफल।',
+    alreadyText: 'पहले से खाता है?',
+    loginLink: 'लॉगिन करें',
+    missingFields: 'कृपया ईमेल और पासवर्ड दर्ज करें।',
+    creatingAccount: 'खाता बनाया जा रहा है...',
+    errorMessage: 'रजिस्ट्रेशन नहीं हो सका।',
+  },
+  budget: {
+    title: 'बजट योजनाकार',
+    description: 'आय, खर्च और बचत लक्ष्यों को एक ही जगह ट्रैक करें।',
+    incomeLabel: 'कुल आय',
+    expensesLabel: 'कुल खर्च',
+    savingsLabel: 'बचत लक्ष्य',
+    categoryLabel: 'श्रेणी',
+    amountLabel: 'राशि',
+    noteLabel: 'टिप्पणी',
+    saveButton: 'बजट सहेजें',
+    savingStatus: 'सहेजा जा रहा है…',
+    savedStatus: 'बजट सफलतापूर्वक सहेजा गया।',
+    errorStatus: 'बजट सहेजा नहीं जा सका। फिर से प्रयास करें।',
+    builderLabel: 'बजट बिल्डर',
+    builderTitle: 'बजट बनाएं',
+    builderDescription: 'आय, बचत और खर्च एक साफ़ दृश्य में ट्रैक करें।',
+    stepLabel: 'चरण',
+    stepIncome: 'आय',
+    stepSavings: 'बचत',
+    stepExpenses: 'खर्च',
+    monthlyDetailsTitle: 'अपनी मासिक बजट जानकारी दर्ज करें',
+    monthlyDetailsSub: 'योजना सरल रखें। प्रत्येक पंक्ति के साथ कुल अपने आप अपडेट होगा।',
+    smartAdviceButton: 'स्मार्ट बजट सलाह',
+    smartAdviceLoading: 'स्मार्ट बजट सलाह...',
+    createPlanButton: 'बिज़नेस प्लान बनाएं',
+    createPlanLoading: 'योजना तैयार हो रही है...',
+    pieChartTitle: 'आय / खर्च / बचत',
+    pieChartLabel: 'पाई चार्ट',
+    budgetShare: 'बजट हिस्सेदारी',
+    planStatus: 'योजना स्थिति',
+    profitable: 'लाभकारी',
+    loss: 'हानि',
+    remainingAfterSavings: 'बचत के बाद शेष',
+    infeasibleWarning: 'वर्तमान योजना व्यवहार्य नहीं है। खर्च घटाएं, बचत लक्ष्य समायोजित करें या आय बढ़ाएं।',
+    monthlyHistoryTitle: 'मासिक इतिहास (अंतिम 6 सेव)',
+    monthlyHistorySub: 'आय बनाम खर्च बनाम बचत',
+    monthlyHistoryEmpty: 'इतिहास देखने के लिए बजट सहेजें।',
+    pieIncome: 'आय',
+    pieExpenses: 'खर्च',
+    pieSavings: 'बचत',
+    incomeShare: 'आय हिस्सा',
+    entryLabel: 'प्रविष्टि',
+  },
+  business: {
+    title: 'सूक्ष्म-निवेश समर्थन',
+    description: 'विश्वसनीय सलाह और कम जोखिम वाली योजना के साथ छोटे व्यवसाय को बढ़ाने के आसान तरीके।',
+    ideas: [
+      { title: 'डेयरी सूक्ष्म-बचत योजना', description: 'दूध बिक्री से हर सप्ताह थोड़ी राशि बचाएं और उसे फ़ीड व आपातकालीन जरूरतों में उपयोग करें।' },
+      { title: 'स्थानीय मेंटरशिप सर्कल', description: 'छोटे व्यवसाय चलाने वाली महिलाओं से जुड़ें और व्यावहारिक सुझाव सीखें।' },
+      { title: 'सरल बैंकिंग कदम', description: 'बचत खाता उपयोग करें और हर खर्च रिकॉर्ड करें।' },
+    ],
+    guideTitle: 'सूक्ष्म-निवेश कैसे उपयोग करें',
+    guideSteps: [
+      '₹100 या ₹200 प्रति सप्ताह का छोटा लक्ष्य तय करें।',
+      'आय और खर्च को सरल नोटबुक में लिखें।',
+      'नई खरीद से पहले आपातकालीन फंड अलग रखें।',
+      'अतिरिक्त मदद के लिए AI सलाहकार से योजना पूछें।',
+    ],
+  },
+  dashboard: {
+    title: 'आपका वित्तीय केंद्र',
+    loading: 'डैशबोर्ड लोड हो रहा है...',
+    greeting: 'नमस्ते {name}, यहां आपके नवीनतम टूल और अंतर्दृष्टि हैं।',
+    signedInAs: 'इस रूप में साइन इन: {name}',
+    cards: [
+      { title: 'AI सहायक', description: 'प्रश्न पूछें और तुरंत वित्तीय मार्गदर्शन पाएं।', to: '/chat' },
+      { title: 'धन अवलोकन', description: 'बैलेंस, बचत लक्ष्य और खर्च को एक डैशबोर्ड में ट्रैक करें।', to: '/budget' },
+      { title: 'व्यवसाय सुझाव', description: 'छोटे व्यवसाय के लिए व्यावहारिक वृद्धि सुझाव प्राप्त करें।', to: '/business' },
+      { title: 'शिक्षण कार्ड', description: 'त्वरित, उपयोगी वित्तीय सीखें।', to: '/chat' },
+      { title: 'वॉयस इंटरैक्शन', description: 'हैंड्स-फ्री मार्गदर्शन के लिए वॉयस कमांड का उपयोग करें।', to: '/chat' },
+    ],
+    activityTitle: 'आपकी नवीनतम गतिविधि',
+    activityDescription: 'साइन इन करने के बाद सबसे जरूरी टूल्स तक तेज़ पहुंच।',
+    activityItems: [
+      { title: 'AI सहायक', description: 'किसी भी समय वित्त सलाह लें।', badge: 'AI', color: 'bg-fuchsia-600' },
+      { title: 'धन अवलोकन', description: 'कुल बैलेंस, खर्च और बचत लक्ष्यों की समीक्षा करें।', badge: '$', color: 'bg-sky-600' },
+      { title: 'व्यवसाय सुझाव', description: 'व्यवसाय वृद्धि के लिए उपयोगी सुझाव पाएं।', badge: 'B', color: 'bg-emerald-600' },
+      { title: 'शिक्षण कार्ड', description: 'वित्तीय कौशल मजबूत करने के त्वरित सुझाव देखें।', badge: 'L', color: 'bg-violet-600' },
+      { title: 'वॉयस इंटरैक्शन', description: 'डैशबोर्ड से हैंड्स-फ्री इंटरैक्शन करें।', badge: 'V', color: 'bg-pink-600', helperTitle: 'मैं आपकी कैसे मदद कर सकता हूँ?', helperDescription: 'वॉयस चैट शुरू करने को कहें।' },
+    ],
+    helpTitle: 'मदद चाहिए?',
+    helpDescription: 'AI सहायक या वॉयस इंटरैक्शन से तुरंत मार्गदर्शन लें।',
+    helpTipTitle: 'सुझाव',
+    helpTipDescription: 'बजट बनाने या व्यवसाय आइडिया के लिए AI सहायक से शुरू करें।',
+    accountActionsTitle: 'खाता क्रियाएँ',
+    accountActionsDescription: 'साइन आउट के लिए नीचे बटन उपयोग करें।',
+    signOutButton: 'साइन आउट',
+  },
+}
+
+const enOverrides = {
+  common: {
+    appName: 'Sakhi Finance',
+    you: 'You',
+    advisor: 'Advisor',
+    guest: 'Guest',
+    search: 'Search',
+    dashboard: 'Dashboard',
+    signIn: 'Sign in',
+    signOut: 'Sign out',
+    loading: 'Loading...',
+    save: 'Save',
+    cancel: 'Cancel',
+    language: 'Language',
+  },
+  nav: {
+    home: 'Home',
+    chat: 'Chat',
+    budget: 'Budget',
+    business: 'Invest',
+    login: 'Login',
+  },
+  footer: {
+    tagline: 'Smart finance companion for rural women',
+    rights: 'All rights reserved.',
+  },
+  splash: {
+    welcome: 'Welcome',
+    namaste: 'Namaste 🙏',
+    subtitle: 'A gentle first-visit guide. Personalized, warm, and built for your money journey.',
+    imageAlt: 'Welcome illustration',
+  },
+}
+
+const odOverrides = {
+  nav: {
+    home: 'ହୋମ୍',
+    chat: 'ଚାଟ୍',
+    budget: 'ବଜେଟ୍',
+    business: 'ନିବେଶ',
+    login: 'ଲଗଇନ୍',
+  },
+  common: {
+    appName: 'Sakhi Finance',
+    language: 'ଭାଷା',
+    search: 'ସନ୍ଧାନ',
+    signIn: 'ଲଗଇନ୍',
+    signOut: 'ସାଇନ୍ ଆଉଟ୍',
+    dashboard: 'ଡ୍ୟାଶବୋର୍ଡ',
+  },
+  splash: {
+    welcome: 'ସ୍ୱାଗତ',
+    namaste: 'ନମସ୍କାର 🙏',
+  },
 }
 
 export const translations = {
-  en: {
-    nav: {
-      home: 'Home',
-      chat: 'Chat',
-      budget: 'Budget',
-      business: 'Invest',
-      login: 'Login',
-    },
-    home: {
-      title: 'Financial independence for Lakshmi and millions like her',
-      description:
-        'AI-driven advice, local-language guidance, micro-investment coaching and budgeting tools built for rural women who are new to finance.',
-      languageLabel: 'Choose your language',
-      welcomeEnglish: 'Welcome',
-      welcomeHindi: 'नमस्ते',
-      introSubtitle: 'Your AI financial companion for savings, budgeting and smart planning in a warm, friendly space.',
-      chooseLanguagePrompt: 'Please choose your preferred language below.',
-      loginPrompt: 'Already a user? Login to continue.',
-      loginDescription: 'Sign in to access your personalized guidance, budgeting tools, and investment coaching.',
-      registerPrompt: 'New here? Register to start your journey.',
-      loginButton: 'Login',
-      registerButton: 'Register',
-      loginNoteTitle: 'Fast, friendly onboarding',
-      loginNoteText: 'Sign in to continue or register now to begin your financial wellness journey with Sakhi Finance.',
-      features: [
-        {
-          title: 'Guided financial education',
-          description:
-            'Simple lessons, local examples and step-by-step advice for women who are starting small businesses.',
-        },
-        {
-          title: 'Voice-enabled support',
-          description:
-            'Talk to the advisor in your own pace and get answers in easy language.',
-        },
-        {
-          title: 'Micro-investment planning',
-          description:
-            'Learn safe savings and small capital strategies for dairy, tailoring or local trade.',
-        },
-        {
-          title: 'Budget coaching',
-          description:
-            'Build a monthly plan, track income and expenses, and protect family goals.',
-        },
-      ],
-      howItHelpsTitle: 'How it helps Lakshmi',
-      howItHelpsText1:
-        'Lakshmi can ask for guidance on building a dairy budget, choosing a small loan, or saving for her children’s school fees. The advisor answers in plain, friendly language.',
-      howItHelpsText2:
-        'The app connects her to mentorship stories, easy banking steps, and a secure way to track money with minimal typing or technical skill.',
-      howItHelpsText3:
-        'This experience is designed for low literacy, local language support, and trusted advice that builds confidence over time.',
-    },
-    chat: {
-      title: 'AI Mentor',
-      description: 'Talk to your financial guide in simple language.',
-      placeholder:
-        'Ask the advisor how to save, start a dairy business, or record expenses.',
-      sendButton: 'Send message',
-      listening: 'Listening...',
-      voiceButton: 'Use voice',
-      languageLabel: 'Language',
-      initialMessage: 'Hi Sakhi! Tell me what you want help with today.',
-      errorMessage: 'There was an error connecting to the advisor. Please try again.',
-      fallbackMessage: 'Sorry, I could not reach the advisor right now.',
-    },
-    login: {
-      welcomeBadge: 'Welcome back',
-      title: 'Secure sign in for your finance journey',
-      subtitle: 'Access your account and continue building trusted savings, budgets, and investment plans.',
-      feature1: {
-        title: 'Elegant experience',
-        description: 'A clean login flow designed for a calming, professional feel.',
-      },
-      feature2: {
-        title: 'Fast access',
-        description: 'Quick sign in with email so you can return to your financial dashboard.',
-      },
-      signIn: 'Sign in to Sakhi Finance',
-      signInDesc: 'Use your email and password to join your financial wellness dashboard.',
-      email: 'Email address',
-      password: 'Password',
-      loginButton: 'Continue',
-      successMessage: 'Login submitted. The real auth flow can be connected here.',
-      forgotText: 'Forgot your password? We can add recovery next.',
-    },
-    register: {
-      banner: 'New Account',
-      title: 'Create your Sakhi Finance profile',
-      subtitle: 'Register now to access personalized savings, budgeting and investment planning.',
-      heading: 'Create an account',
-      description: 'Start with your name, email and a secure password.',
-      name: 'Full name',
-      email: 'Email address',
-      password: 'Password',
-      registerButton: 'Create account',
-      successMessage: 'Registration submitted. We will connect real registration soon.',
-      alreadyText: 'Already have an account?',
-      loginLink: 'Login here',
-    },
-    budget: {
-      title: 'Budget planner',
-      description:
-        'Track income, expenses and savings goals for Lakshmi’s dairy or home-based business.',
-      incomeLabel: 'Income total',
-      expensesLabel: 'Expenses total',
-      savingsLabel: 'Savings goal',
-      categoryLabel: 'Category',
-      amountLabel: 'Amount',
-      noteLabel: 'Note',
-      saveButton: 'Save budget',
-      savingStatus: 'Saving…',
-      savedStatus: 'Budget saved successfully.',
-      errorStatus: 'Could not save budget. Try again.',
-    },
-    business: {
-      title: 'Micro-investment support',
-      description:
-        'Discover easy ways to grow a small business with trusted tips and low-risk planning.',
-      ideas: [
-        {
-          title: 'Dairy micro-savings plan',
-          description:
-            'Save a small amount each week from milk sales, then use the fund for cattle feed and emergency needs.',
-        },
-        {
-          title: 'Local mentorship circle',
-          description:
-            'Connect with women who already run small businesses and learn practical tips for customer trust.',
-        },
-        {
-          title: 'Simple banking steps',
-          description:
-            'Use a basic savings account and record every expense so you can build credit and safety.',
-        },
-      ],
-      guideTitle: 'How to use micro-investment',
-      guideSteps: [
-        'Start with a small target: ₹100 or ₹200 per week.',
-        'Record money coming in and money going out in a simple notebook.',
-        'Save a portion for emergency expenses before spending on new stock.',
-        'Ask the AI advisor for a plan when you need extra help.',
-      ],
-    },
-  },
-  hi: {
-    nav: {
-      home: 'होम',
-      chat: 'चैट',
-      budget: 'बजट',
-      business: 'निवेश',
-      login: 'लॉगिन',
-    },
-    home: {
-      title: 'लक्ष्मी और लाखों महिलाओं के लिए वित्तीय स्वतंत्रता',
-      description:
-        'ग्रामीण महिलाओं के लिए AI-आधारित सलाह, स्थानीय भाषा मार्गदर्शन, सूक्ष्म-निवेश कोचिंग और बजट उपकरण।',
-      languageLabel: 'अपनी भाषा चुनें',
-      welcomeEnglish: 'Welcome',
-      welcomeHindi: 'नमस्ते',
-      introSubtitle: 'बचत, बजट और स्मार्ट योजना के लिए आपका AI वित्तीय साथी।',
-      chooseLanguagePrompt: 'कृपया नीचे अपनी पसंदीदा भाषा चुनें।',
-      loginPrompt: 'पहले से ही उपयोगकर्ता हैं? जारी रखने के लिए लॉगिन करें।',
-      loginDescription: 'अपनी निजी मार्गदर्शन, बजट उपकरण, और निवेश कोचिंग तक पहुंचने के लिए साइन इन करें।',
-      registerPrompt: 'नए हैं? अपनी यात्रा शुरू करने के लिए रजिस्टर करें।',
-      loginButton: 'लॉगिन',
-      registerButton: 'रजिस्टर',
-      loginNoteTitle: 'तेज़, दोस्ताना ऑनबोर्डिंग',
-      loginNoteText: 'जारी रखने के लिए साइन इन करें या अब पंजीकरण करें और अपनी वित्तीय वेलनेस यात्रा प्रारंभ करें।',
-      features: [
-        {
-          title: 'मार्गदर्शित वित्तीय शिक्षा',
-          description:
-            'आसान उदाहरणों और चरण-दर-चरण सलाह के साथ सरल पाठ।',
-        },
-        {
-          title: 'वॉइस-सहायता',
-          description:
-            'अपनी गति से सलाहकार से बात करें और आसान भाषा में उत्तर पाएं।',
-        },
-        {
-          title: 'सूक्ष्म-निवेश योजना',
-          description:
-            'डेयरी, सिलाई या स्थानीय व्यापार के लिए सुरक्षित बचत और छोटे पूंजी रणनीतियाँ सीखें।',
-        },
-        {
-          title: 'बजट कोचिंग',
-          description:
-            'मासिक योजना बनाएं, आय और खर्च ट्रैक करें, और पारिवारिक लक्ष्यों की सुरक्षा करें।',
-        },
-      ],
-      howItHelpsTitle: 'यह लक्ष्मी की कैसे मदद करता है',
-      howItHelpsText1:
-        'लक्ष्मी डेयरी बजट बनाने, छोटे ऋण चुनने, या अपने बच्चों की स्कूल फीस बचाने में मार्गदर्शन मांग सकती है। सलाहकार सरल, मित्रवत भाषा में उत्तर देता है।',
-      howItHelpsText2:
-        'ऐप उसे मेंटरशिप कहानियों, आसान बैंकिंग चरणों और कम टाइपिंग के साथ पैसे ट्रैक करने का सुरक्षित तरीका प्रदान करता है।',
-      howItHelpsText3:
-        'यह अनुभव कम साक्षरता, स्थानीय भाषा सहायता और आत्मविश्वास बढ़ाने वाली भरोसेमंद सलाह के लिए डिज़ाइन किया गया है।',
-    },
-    chat: {
-      title: 'AI मार्गदर्शक',
-      description: 'सरल भाषा में अपने वित्तीय मार्गदर्शक से बात करें।',
-      placeholder:
-        'बचत कैसे करें, डेयरी व्यापार शुरू कैसे करें, या खर्च रिकॉर्ड कैसे करें, यह पूछें।',
-      sendButton: 'संदेश भेजें',
-      listening: 'सुन रहा है...',
-      voiceButton: 'वॉयस का उपयोग करें',
-      languageLabel: 'भाषा',
-      initialMessage: 'नमस्ते सख़ी! मुझे बताएं कि आप आज किस मदद की तलाश में हैं।',
-      errorMessage: 'सलाहकार से कनेक्ट करने में त्रुटि हुई। कृपया फिर से प्रयास करें।',
-      fallbackMessage: 'क्षमा करें, मैं अभी सलाहकार तक नहीं पहुंच पाया।',
-    },
-    login: {
-      welcomeBadge: 'वापसी पर स्वागत है',
-      title: 'आपकी वित्तीय यात्रा के लिए सुरक्षित साइन इन',
-      subtitle: 'अपने खाते तक पहुंचें और विश्वसनीय बचत, बजट और निवेश योजनाओं को आगे बढ़ाएं।',
-      feature1: {
-        title: 'शानदार अनुभव',
-        description: 'एक शांत, पेशेवर लॉगिन फ़्लो।',
-      },
-      feature2: {
-        title: 'तेज़ पहुँच',
-        description: 'ईमेल के साथ त्वरित साइन इन करें और अपने वित्तीय डैशबोर्ड पर लौटें।',
-      },
-      signIn: 'Sakhi Finance में साइन इन करें',
-      signInDesc: 'अपने वित्तीय वेलनेस डैशबोर्ड से जुड़ने के लिए ईमेल और पासवर्ड का उपयोग करें।',
-      email: 'ईमेल पता',
-      password: 'पासवर्ड',
-      loginButton: 'जारी रखें',
-      successMessage: 'लॉगिन सबमिट किया गया। असली ऑथ फ़्लो यहां जोड़ा जा सकता है।',
-      forgotText: 'पासवर्ड भूल गए? हम बाद में रिकवरी जोड़ सकते हैं।',
-    },
-    budget: {
-      title: 'बजट योजनाकार',
-      description:
-        'लक्ष्मी की डेयरी या घरेलू व्यवसाय के लिए आय, खर्च और बचत लक्ष्यों को ट्रैक करें।',
-      incomeLabel: 'कुल आय',
-      expensesLabel: 'कुल खर्च',
-      savingsLabel: 'बचत लक्ष्य',
-      categoryLabel: 'श्रेणी',
-      amountLabel: 'राशि',
-      noteLabel: 'टिप्पणी',
-      saveButton: 'बजट सहेजें',
-      savingStatus: 'सहेजा जा रहा है…',
-      savedStatus: 'बजट सफलतापूर्वक सहेजा गया।',
-      errorStatus: 'बजट सहेजा नहीं जा सका। फिर से प्रयास करें।',
-    },
-    business: {
-      title: 'सूक्ष्म-निवेश समर्थन',
-      description:
-        'विश्वसनीय सलाह और कम जोखिम वाली योजना के साथ एक छोटे व्यवसाय को बढ़ाने के आसान तरीके खोजें।',
-      ideas: [
-        {
-          title: 'डेयरी सूक्ष्म-बचत योजना',
-          description:
-            'दूध बिक्री से हर सप्ताह थोड़ी राशि बचाएं, फिर उसे फ़ीड और आपातकालीन आवश्यकताओं के लिए उपयोग करें।',
-        },
-        {
-          title: 'स्थानीय मेंटरशिप सर्कल',
-          description:
-            'उन महिलाओं से जुड़ें जो पहले से छोटे व्यवसाय चलाती हैं और ग्राहक विश्वास के लिए व्यावहारिक सुझाव सीखें।',
-        },
-        {
-          title: 'सरल बैंकिंग कदम',
-          description:
-            'एक साधारण बचत खाता उपयोग करें और अधिक सुरक्षा के लिए प्रत्येक खर्च को रिकॉर्ड करें।',
-        },
-      ],
-      guideTitle: 'सूक्ष्म-निवेश कैसे उपयोग करें',
-      guideSteps: [
-        '₹100 या ₹200 प्रति सप्ताह का एक छोटा लक्ष्य निर्धारित करें।',
-        'एक सरल नोटबुक में आय और खर्च को रिकॉर्ड करें।',
-        'नई स्टॉक पर खर्च करने से पहले आपातकालीन खर्च के लिए एक हिस्सा बचाएं।',
-        'जब अतिरिक्त मदद चाहिए तो AI सलाहकार से योजना पूछें।',
-      ],
-    },
-  },
-  od: {
-    nav: {
-      home: 'ହୋମ୍',
-      chat: 'ଚାଟ୍',
-      budget: 'ବଜେଟ୍',
-      business: 'ନିବେଶ',
-      login: 'ଲଗଇନ୍',
-    },
-    home: {
-      title: 'ଲକ୍ଷ୍ମୀ ଓ ଲକ୍ଷାଦିକ ମହିଳାଙ୍କ ପାଇଁ ଆର୍ଥିକ ସ୍ବାଧୀନତା',
-      description:
-        'ଗ୍ରାମୀଣ ମହିଳାଙ୍କ ପାଇଁ AI ଆଧାରିତ ପରାମର୍ଶ, ସ୍ଥାନୀୟ ଭାଷା ମାର୍ଗଦର୍ଶନ, ମାଇକ୍ରୋ-ନିବେଶ କୋଚିଂ ଓ ବଜେଟ୍ ଉପକରଣ।',
-      languageLabel: 'ଆପଣଙ୍କ ଭାଷା ଚୟନ କରନ୍ତୁ',
-      welcomeEnglish: 'Welcome',
-      welcomeHindi: 'नमस्ते',
-      introSubtitle: 'ସଞ୍ଚୟ, ବଜେଟ୍ ଓ ସ୍ମାର୍ଟ ପରିକଳ୍ପନା ପାଇଁ ଆପଣଙ୍କର AI ଆର୍ଥିକ ସହଯୋଗୀ।',
-      chooseLanguagePrompt: 'ଦୟାକରି ନିମ୍ନରୁ ଆପଣଙ୍କ ପସନ୍ଦର ଭାଷା ଚୟନ କରନ୍ତୁ।',
-      loginPrompt: 'ପୂର୍ବରୁ ଉପଯୋଗକର୍ତ୍ତା? ଚାଲୁଅ ଲଗଇନ୍ କରନ୍ତୁ।',
-      loginDescription: 'ଆପଣଙ୍କର ବ୍ୟକ୍ତିଗତ ମାର୍ଗଦର୍ଶନ, ବଜେଟ୍ ଉପକରଣ ଓ ନିବେଶ କୋଚିଂ ପାଇଁ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ।',
-      registerPrompt: 'ନୂତନ ଏଠାରେ? ଆପଣଙ୍କର ଯାତ୍ରା ଆରମ୍ଭ କରିବା ପାଇଁ ରେଜିଷ୍ଟର୍ କରନ୍ତୁ।',
-      loginButton: 'ଲଗଇନ୍',
-      registerButton: 'ରେଜିଷ୍ଟର୍',
-      loginNoteTitle: 'ଦ୍ରୁତ, ମିଳନସାର ଅନ ବୋର୍ଡିଂ',
-      loginNoteText: 'ଚାଲୁଅ ଜାରି ରଖିବା ପାଇଁ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ କିମ୍ବା ବର୍ତ୍ତମାନ ରେଜିଷ୍ଟର୍ କରନ୍ତୁ ଏବଂ ଆପଣଙ୍କର ଆର୍ଥିକ ସ୍ୱାସ୍ଥ୍ୟ ଯାତ୍ରା ଆରମ୍ଭ କରନ୍ତୁ।',
-      features: [
-        {
-          title: 'ମାର୍ଗଦର୍ଶିତ ଆର୍ଥିକ ଶିକ୍ଷା',
-          description:
-            'ସରଳ ଉଦାହରଣ ଓ ଧାପ-ଧାପ ଉପଦେଶ ସହିତ ସହଜ ପାଠ।',
-        },
-        {
-          title: 'ଭଏସ୍ ଆଧାରିତ ସାହାଯ୍ୟ',
-          description:
-            'ଆପଣଙ୍କ ଗତିରେ ଉପଦେଶକ ସହ ଆଲୋଚନା କରନ୍ତୁ ଓ ସରଳ ଭାଷାରେ ଉତ୍ତର ପାଆନ୍ତୁ।',
-        },
-        {
-          title: 'ମାଇକ୍ରୋ-ନିବେଶ ପରିକଳ୍ପନା',
-          description:
-            'ଡେୟାରୀ, ସିଲାଇ କିମ୍ବା ସ୍ଥାନୀୟ ବ୍ୟବସାୟ ପାଇଁ ସୁରକ୍ଷିତ ସଞ୍ଚୟ ଓ ଛୋଟ ପুঁଁଜି ଯୋଜନା ଶିଖନ୍ତୁ।',
-        },
-        {
-          title: 'ବଜେଟ୍ କୋଚିଂ',
-          description:
-            'ମାସିକ ଯୋଜନା ତିଆରି କରନ୍ତୁ, ଆୟ ଓ ଖର୍ଚ୍ଚ ଟ୍ରାକ୍ କରନ୍ତୁ, ଏବଂ ପରିବାର ଲକ୍ଷ୍ୟ ସୁରକ୍ଷିତ କରନ୍ତୁ।',
-        },
-      ],
-      howItHelpsTitle: 'ଏହା ଲକ୍ଷ୍ମୀଙ୍କୁ କିଭଳି ସାହାଯ୍ୟ କରେ',
-      howItHelpsText1:
-        'ଲକ୍ଷ୍ମୀ ଡେୟାରୀ ବଜେଟ୍ ବନାଇବା, ଛୋଟ ଋଣ ଚୟନ କରିବା, କିମ୍ବା ତାଙ୍କର ଶିଶୁଙ୍କର ଶିକ୍ଷା ଖର୍ଚ୍ଚ ପାଇଁ ସଞ୍ଚୟ କରିବା ସନ୍ଦର୍ଭରେ ମାର୍ଗଦର୍ଶନ ମାଗିପାରନ୍ତି। ଉପଦେଶକ ଲହଜ ଓ ମିତ୍ରମୟ ଭାଷାରେ ଉତ୍ତର ଦିଏ।',
-      howItHelpsText2:
-        'ଆପ୍ ତାଙ୍କୁ ମେଣ୍ଟରଶିପ୍ କାହାଣୀ, ସହଜ ବ୍ୟାଙ୍କିଙ୍ଗ୍ ପଦକ୍ଷେପ ଏବଂ କମ୍ ଟାଇପିଙ୍ଗ ସହିତ ପଇସା ଟ୍ରାକ୍ କରିବାର ସୁରକ୍ଷିତ ଉପାୟ ଯୋଗାଇଦେଇଥାଏ।',
-      howItHelpsText3:
-        'ଏହି ଅନୁଭବ କମ୍ ସାକ୍ଷରତା, ସ୍ଥାନୀୟ ଭାଷା ସାହାଯ୍ୟ ଓ ଆତ୍ମ-ଶକ୍ତି ବୃଦ୍ଧି କରୁଥିବା ଭରସାଯୋଗ୍ୟ ପରାମର୍ଶ ପାଇଁ ଡିଜାଇନ୍ କରାଯାଇଛି।',
-    },
-    chat: {
-      title: 'AI ମାର୍ଗଦର୍ଶକ',
-      description: 'ସରଳ ଭାଷାରେ ଆପଣଙ୍କର ଆର୍ଥିକ ମାର୍ଗଦର୍ଶକ ସହ ଆଲୋଚନା କରନ୍ତୁ।',
-      placeholder:
-        'କେମିତି ସଞ୍ଚୟ କରିବେ, ଡେୟାରୀ ବ୍ୟବସାୟ କିପରି ଆରମ୍ଭ କରିବେ, କିମ୍ବା ଖର୍ଚ୍ଚ କଂ ଏହା ପ୍ରଶ୍ନ କରନ୍ତୁ।',
-      sendButton: 'ପଦାର୍ଥ ପଠାନ୍ତୁ',
-      listening: 'ଶୁଣୁଛି...',
-      voiceButton: 'ଭଏସ୍ ବ୍ୟବହାର କରନ୍ତୁ',
-      languageLabel: 'ଭାଷା',
-      initialMessage: 'ନମସ୍କାର ସਖୀ! ଆପଣଙ୍କୁ ଆଜି କେମିତି ସାହାଯ୍ୟ କରିପାରିବି?',
-      errorMessage: 'ପରାମର୍ଶଦାତା ସହ ଯୋଡ଼ିବାରେ ତ୍ରୁଟି ହେଲା। ଦୟାକରି ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ।',
-      fallbackMessage: 'ଦୟାକରି ଖେମା କରନ୍ତୁ, ମୁଁ ବର୍ତ୍ତମାନ ପରାମର୍ଶଦାତା ପର୍ଯ୍ୟନ୍ତ ପହଞ୍ଚିପାରିଲି ନାହିଁ।',
-    },
-    login: {
-      welcomeBadge: 'ପୁନର୍ବାର ସ୍ଵାଗତ',
-      title: 'ଆପଣଙ୍କର ଆର୍ଥିକ ଯାତ୍ରା ପାଇଁ ସୁରକ୍ଷିତ ସାଇନ୍ ଇନ୍',
-      subtitle: 'ଆପଣଙ୍କ ଖାତାକୁ ପ୍ରବେଶ କରନ୍ତୁ ଏବଂ ଭରସାଯୋଗ୍ୟ ସଞ୍ଚୟ, ବଜେଟ୍ ଏବଂ ନିବେଶ ଯୋଜନାଗୁଡ଼ିକୁ ଆଗକୁ ନେଉନ୍ତୁ।',
-      feature1: {
-        title: 'ଶୁଭ ବ୍ୟବହାର',
-        description: 'ସ୍ଥିର, ପ୍ରଫେସନାଲ୍ ଅନୁଭୂତି ପାଇଁ ସୁନ୍ଦର ଲଗଇନ୍ ଫ୍ଲୋ।',
-      },
-      feature2: {
-        title: 'ଶୀଘ୍ର ପ୍ରବେଶ',
-        description: 'ଇମେଲ୍ ସହ ତ୍ୱରିତ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ ଏବଂ ଆପଣଙ୍କର ଡ୍ୟାଶବୋର୍ଡକୁ ଫେରନ୍ତୁ।',
-      },
-      signIn: 'Sakhi Finance ରେ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ',
-      signInDesc: 'ଆପଣଙ୍କ ଆର୍ଥିକ ସ୍ବାସ୍ଥ୍ୟ ଡ୍ୟାଶବୋର୍ଡ ସହିତ ଯୋଗ ହେବା ପାଇଁ ଇମେଲ୍ ଓ ପାସୱାର୍ଡ ବ୍ୟବହାର କରନ୍ତୁ।',
-      email: 'ଇମେଲ୍ ପତା',
-      password: 'ପାସୱାର୍ଡ',
-      loginButton: 'ଚାଲାନ୍ତୁ',
-      successMessage: 'ଲଗଇନ୍ ସଂପ୍ରେଷିତ ହେଲା। ସତ୍ୟ ଅଥ ଫ୍ଲୋ ଏଠାରେ ଯୋଗ କରାଯାଇପାରେ।',
-      forgotText: 'ପାସୱାର୍ଡ ଭୁଲିଯାଇଛନ୍ତି? ଆମେ ପରେ ରିକଭରୀ ଯୋଗ କରିପାରିବା।',
-    },
-    budget: {
-      title: 'ବଜେଟ୍ ଯୋଜନାକର୍ତ୍ତା',
-      description:
-        'ଲକ୍ଷ୍ମୀଙ୍କର ଡେୟାରୀ କିମ୍ବା ଘରୋଇ ବ୍ୟବସାୟ ପାଇଁ ଆୟ, ଖର୍ଚ୍ଚ ଓ ସଞ୍ଚୟ ଲକ୍ଷ୍ୟ ଟ୍ରାକ୍ କରନ୍ତୁ।',
-      incomeLabel: 'ଆୟ ମୋଟ',
-      expensesLabel: 'ଖର୍ଚ୍ଚ ମୋଟ',
-      savingsLabel: 'ସଞ୍ଚୟ ଲକ୍ଷ୍ୟ',
-      categoryLabel: 'ଶ୍ରେଣୀ',
-      amountLabel: 'ରାଶି',
-      noteLabel: 'ଟିପ୍ପଣୀ',
-      saveButton: 'ବଜେଟ୍ ସଞ୍ଚୟ କରନ୍ତୁ',
-      savingStatus: 'ସଞ୍ଚୟ ହେଉଛି…',
-      savedStatus: 'ବଜେଟ୍ ସଫଳତାର ସହିତ ସଞ୍ଚୟ ହେଲା।',
-      errorStatus: 'ବଜେଟ୍ ସଞ୍ଚୟ କରାଯାଇନାହିଁ। ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ।',
-    },
-    business: {
-      title: 'ମାଇକ୍ରୋ-ନିବେଶ ସହାୟତା',
-      description:
-        'ବିଶ୍ୱସନୀୟ ପରାମର୍ଶ ଓ କମ୍ ଝୁଲି ଯୋଜନା ସହିତ ଛୋଟ ବ୍ୟବସାୟ ବୃଦ୍ଧି କରିବାର ସହଜ ଉପାୟ ଖୋଜନ୍ତୁ।',
-      ideas: [
-        {
-          title: 'ଡେୟାରୀ ମାଇକ୍ରୋ-ସଞ୍ଚୟ ଯୋଜନା',
-          description:
-            'ଦୁଧ ବିକ୍ରୟରୁ ପ୍ରତ୍ୟେକ ସପ୍ତାହରେ ଥୋଡ଼ା ଟଙ୍କା ବଞ୍ଚାନ୍ତୁ, ତାପରେ ଏହାକୁ ଖାଦ୍ୟ ଏବଂ ଆପାତକାଳୀନ ଆବଶ୍ୟକତା ପାଇଁ ବ୍ୟବହାର କରନ୍ତୁ।',
-        },
-        {
-          title: 'ସ୍ଥାନୀୟ ମେଣ୍ଟରଶିପ୍ ବୃତ୍ତ',
-          description:
-            'ଜେଉଁ ମହିଳା ଛୋଟ ବ୍ୟବସାୟ ପ୍ରଚାଳନା କରୁଛନ୍ତି ସେମାନଙ୍କ ସହିତ ଯୋଗ ହେବା ଏବଂ ଗ୍ରାହକ ବିଶ୍ୱାସ ପାଇଁ ପ୍ରାୟୋଗିକ ଟିପ୍ସ ଶିଖନ୍ତୁ।',
-        },
-        {
-          title: 'ସରଳ ବ୍ୟାଙ୍କିଙ୍ଗ୍ ପଦକ୍ଷେପ',
-          description:
-            'ଏକ ମୌଳିକ ସଞ୍ଚୟ ଖାତା ବ୍ୟବହାର କରନ୍ତୁ ଏବଂ ଅଧିକ ସୁରକ୍ଷା ପାଇଁ ପ୍ରତ୍ୟେକ ଖର୍ଚ୍ଚକୁ ରେକର୍ଡ୍ କରନ୍ତୁ।',
-        },
-      ],
-      guideTitle: 'ମାଇକ୍ରୋ-ନିବେଶ କିପରି ବ୍ୟବହାର କରିବେ',
-      guideSteps: [
-        '₹100 କିମ୍ବା ₹200 ପ୍ରତ୍ୟେକ ସପ୍ତାହରେ ଏକ ଛୋଟ ଲକ୍ଷ୍ୟ ଆରମ୍ଭ କରନ୍ତୁ।',
-        'ଆୟ ଓ ଖର୍ଚ୍ଚକୁ ସରଳ ଏକ ନୋଟ୍‌ବୁକ୍‌ରେ ରେକର୍ଡ୍ କରନ୍ତୁ।',
-        'ନୂତନ ଷ୍ଟକ୍‌ରେ ଖର୍ଚ୍ଚ କରିବାରୁ ପୂର୍ବରୁ ଆପାତକାଳୀନ ଖର୍ଚ୍ଚ ପାଇଁ ଏକ ଅଂଶ ସଞ୍ଚୟ କରନ୍ତୁ।',
-        'ଅତିରିକ୍ତ ସାହାଯ୍ୟ ଆବଶ୍ୟକ ହେଲେ AI ପରାମର୍ଶଦାତାକୁ ଯୋଜନା ପଚାରନ୍ତୁ।',
-      ],
-    },
-  },
+  hi: baseHi,
+  en: enOverrides,
+  od: odOverrides,
+  bn: {},
+  te: {},
+  mr: {},
+  ta: {},
+  ur: {},
+  gu: {},
+  kn: {},
+  ml: {},
+  pa: {},
+  as: {},
+  mai: {},
+  sat: {},
+  ks: {},
+  ne: {},
+  kok: {},
+  sd: {},
+  doi: {},
+  mni: {},
+  brx: {},
+  sa: {},
+}
+
+const isObject = (value) => value && typeof value === 'object' && !Array.isArray(value)
+
+const deepMerge = (base, override) => {
+  if (!isObject(base)) return override ?? base
+
+  const result = { ...base }
+  for (const key of Object.keys(override || {})) {
+    const baseValue = base[key]
+    const overrideValue = override[key]
+
+    if (isObject(baseValue) && isObject(overrideValue)) {
+      result[key] = deepMerge(baseValue, overrideValue)
+    } else {
+      result[key] = overrideValue
+    }
+  }
+
+  return result
+}
+
+export const resolveTranslation = (language) => {
+  const selected = translations[language] || {}
+  return deepMerge(baseHi, selected)
 }
